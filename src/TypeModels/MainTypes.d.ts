@@ -32,7 +32,8 @@ type ChannelName =
   | 'LoadKeyBinds'
   | 'SelectProfilePicture'
   | 'SaveProfileData'
-  | 'VerifyLogin';
+  | 'VerifyLogin'
+  | 'Override_INSECURE';
 type ChannelObject = {
   [key: string]: ChannelName;
 };

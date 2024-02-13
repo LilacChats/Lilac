@@ -63,7 +63,33 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
     });
 });
 
-ipcMain.on(CHANNELS.VerifyLogin, async (event, arg: VerifyLoginReqObject) => {
+function fileExistsSync(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+ipcMain.on(CHANNELS.Override_INSECURE, async (event, arg: any) => {
+  if (fileExistsSync(process.cwd() + '\\src\\UserFiles\\AccountData.json')) {
+    let profileData = require(
+      process.cwd() + '\\src\\UserFiles\\AccountData.json',
+    );
+    event.reply(CHANNELS.Override_INSECURE, {
+      override: true,
+      data: profileData,
+    });
+  } else {
+    event.reply(CHANNELS.Override_INSECURE, {
+      override: false,
+      data: null,
+    });
+  }
+});
+
+ipcMain.on(CHANNELS.VerifyLogin, async (event, arg) => {
   let profileData = require(
     process.cwd() + '\\src\\UserFiles\\AccountData.json',
   );

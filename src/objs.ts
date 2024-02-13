@@ -7,6 +7,7 @@ const CHANNELS: ChannelObject = {
   SelectProfilePicture: 'SelectProfilePicture',
   SaveProfileData: 'SaveProfileData',
   VerifyLogin: 'VerifyLogin',
+  Override_INSECURE: 'Override_INSECURE',
 };
 
 const EMPTY_BINDINGS_OBJECT: Bindings = {

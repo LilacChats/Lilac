@@ -64,14 +64,27 @@ const HomePage = () => {
       setName(args.data.name);
       setEmail(args.data.email);
       setPictureData(args.data.pictureData);
+      setServerURL(args.data.serverURL);
       setCurrentPage(1);
     } else {
       manageErrorState(-2, true, args.validationObject);
     }
   });
 
+  //REMOVE THIS CODE. THIS IS ONLY FOR TESTING.
+  window.electron.ipcRenderer.once(CHANNELS.Override_INSECURE, (args: any) => {
+    if (args.override) {
+      setName(args.data.name);
+      setEmail(args.data.email);
+      setPictureData(args.data.pictureData);
+      setServerURL(args.data.serverURL);
+      setCurrentPage(1);
+    }
+  });
+
   useEffect(() => {
     window.electron.ipcRenderer.sendMessage(CHANNELS.LoadKeyBinds, {});
+    window.electron.ipcRenderer.sendMessage(CHANNELS.Override_INSECURE, {});
   }, []);
 
   function manageErrorState(
