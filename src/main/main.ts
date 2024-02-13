@@ -9,10 +9,13 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import fs from 'fs';
+import { dialog, app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import { CHANNELS } from '../objs.ts';
+import { FileDialogObject } from '../TypeModels/MainTypes.d.ts';
 import log from 'electron-log';
-import MenuBuilder from './menu';
+// import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -25,10 +28,43 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
+ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg) => {
+  let maxChars = 0,
+    data = require('../../Configs/KeyBindings.json');
+  for (const key in data) {
+    if (data[key].keyCombination.length > maxChars) {
+      maxChars = data[key].keyCombination.length;
+    }
+  }
+  event.reply(CHANNELS.LoadKeyBinds, { maxChars: maxChars, keyBinds: data });
+});
+
+ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg) => {
+  dialog
+    .showOpenDialog({ properties: ['openFile'] })
+    .then((res: FileDialogObject) => {
+      // console.log(res.filePaths[0]);
+      let sourceFilePath: string = res.filePaths[0];
+      let deconstructedSourceFilePath: string[] =
+        sourceFilePath.split(/[\/\\]/);
+      let destinationFilePath: string =
+        process.cwd() +
+        '\\src\\UserFiles\\ProfilePicture\\' +
+        deconstructedSourceFilePath[deconstructedSourceFilePath.length - 1];
+      fs.readFile(sourceFilePath, (err, data) => {
+        if (err) throw err;
+        let base64Image = Buffer.from(data, 'binary').toString('base64');
+        event.reply(CHANNELS.SelectProfilePicture, { data: base64Image });
+      });
+      /*exec(
+        'copy ' + sourceFilePath + ' ' + destinationFilePath,
+        (error, stdout, stdin) => {
+          event.reply(CHANNELS.SelectProfilePicture, {
+            path: destinationFilePath,
+          });
+        },
+      );*/
+    });
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -73,6 +109,7 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    autoHideMenuBar: true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -98,8 +135,8 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // const menuBuilder = new MenuBuilder(mainWindow);
+  // menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

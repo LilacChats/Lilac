@@ -1,0 +1,42 @@
+{
+  "NEW_CHAT":{
+    "name":"New Chat",
+    "keyCombination": ["/","n","c"]
+  },
+  "NEW_GROUP":{
+    "name": "New Group",
+    "keyCombination":["/","n","g"]
+  },
+  "OPEN_SETTINGS":{
+    "name": "Open Settings",
+    "keyCombination":["/","o","s"]
+  },
+  "SHOW_KEY_BINDS":  {
+    "name": "Key Binds",
+    "keyCombination": ["/","k","b"]
+  },
+  "BACK":{
+    "name": "Back",
+    "keyCombination": ["/","b"]
+  },
+  "FORWARD":{
+    "name": "Next",
+    "keyCombination": ["/","f"]
+  },
+  "SIGNUP": {
+    "name": "Signup",
+    "keyCombination": ["/","s"]
+  },
+  "LOGIN": {
+    "name": "Login",
+    "keyCombination": ["/","l"]
+  },
+  "ACCEPT_AGREEMENT":{
+    "name": "Accept",
+    "keyCombination":["/","a","a"]
+  },
+  "REJECT_AGREEMENT": {
+    "name": "Reject",
+    "keyCombination": ["/","r","a"]
+  }
+}
