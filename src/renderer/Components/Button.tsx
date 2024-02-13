@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import '../Styles/Button.css';
-import ButtonProps from '../../TypeModels/ButtonModel.d.ts';
+import { ButtonProps } from '../../TypeModels/ButtonModel';
 
-const Button: React.FC<ButtonProps> = ({ label, keybinding, onClick }) => {
+const Button: React.FC<ButtonProps> = ({
+  label,
+  keybinding,
+  onClick = () => {},
+}) => {
   const [hoverState, setHoverState] = useState<boolean>(false);
   return (
     <div

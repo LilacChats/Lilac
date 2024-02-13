@@ -12,8 +12,11 @@ import path from 'path';
 import fs from 'fs';
 import { dialog, app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import { CHANNELS } from '../objs.ts';
-import { FileDialogObject } from '../TypeModels/MainTypes.d.ts';
+import { CHANNELS } from '../objs';
+import {
+  FileDialogObject,
+  VerifyLoginReqObject,
+} from '../TypeModels/MainTypes';
 import log from 'electron-log';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -28,7 +31,7 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg) => {
+ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg: {}) => {
   let maxChars = 0,
     data = require('../../Configs/KeyBindings.json');
   for (const key in data) {
@@ -39,21 +42,14 @@ ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg) => {
   event.reply(CHANNELS.LoadKeyBinds, { maxChars: maxChars, keyBinds: data });
 });
 
-ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg) => {
+ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
   dialog
     .showOpenDialog({ properties: ['openFile'] })
     .then((res: FileDialogObject) => {
-      // console.log(res.filePaths[0]);
       let sourceFilePath: string = res.filePaths[0];
-      let deconstructedSourceFilePath: string[] =
-        sourceFilePath.split(/[\/\\]/);
-      let destinationFilePath: string =
-        process.cwd() +
-        '\\src\\UserFiles\\ProfilePicture\\' +
-        deconstructedSourceFilePath[deconstructedSourceFilePath.length - 1];
-      fs.readFile(sourceFilePath, (err, data) => {
+      fs.readFile(sourceFilePath, (err, data: Buffer) => {
         if (err) throw err;
-        let base64Image = Buffer.from(data, 'binary').toString('base64');
+        let base64Image: string = Buffer.from(data).toString('base64');
         event.reply(CHANNELS.SelectProfilePicture, { data: base64Image });
       });
       /*exec(
@@ -65,6 +61,33 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg) => {
         },
       );*/
     });
+});
+
+ipcMain.on(CHANNELS.VerifyLogin, async (event, arg: VerifyLoginReqObject) => {
+  let profileData = require(
+    process.cwd() + '\\src\\UserFiles\\AccountData.json',
+  );
+  event.reply(CHANNELS.VerifyLogin, {
+    validationObject: {
+      emailValid: arg.email == profileData.email ? true : false,
+      passwordValid: arg.password == profileData.password ? true : false,
+    },
+    data:
+      arg.email == profileData.email && arg.password == profileData.password
+        ? profileData
+        : {},
+  });
+});
+
+ipcMain.on(CHANNELS.SaveProfileData, async (event, arg) => {
+  console.log(arg);
+  fs.writeFile(
+    process.cwd() + '\\src\\UserFiles\\AccountData.json',
+    JSON.stringify(arg, null, 2),
+    (err) => {
+      //handle error here
+    },
+  );
 });
 
 if (process.env.NODE_ENV === 'production') {

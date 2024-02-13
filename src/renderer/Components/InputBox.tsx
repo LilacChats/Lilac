@@ -3,12 +3,12 @@ import {
   validateEmail,
   validateName,
   validateServerURL,
-} from '../../validator.ts';
+} from '../../validator';
 import {
   useProfileCreationBreakerContext,
   useProfileInfoContext,
-} from '../Contexts.tsx';
-import { InputBoxProps } from '../../TypeModels/InputBox.d.ts';
+} from '../Contexts';
+import { InputBoxProps } from '../../TypeModels/InputBox';
 import '../Styles/InputBox.css';
 
 const InputBox: React.FC<InputBoxProps> = ({
@@ -62,10 +62,10 @@ const InputBox: React.FC<InputBoxProps> = ({
           type === 'email'
             ? email
             : type === 'name'
-              ? name
-              : type === 'password'
-                ? password
-                : serverURL
+            ? name
+            : type === 'password'
+            ? password
+            : serverURL
         }
         onChange={(e) => {
           if (e.target.value != '') setInputClass('InputText');

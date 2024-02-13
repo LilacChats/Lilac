@@ -21,9 +21,27 @@ type ControlButtonStateObject = {
   stateData: KeyBindingObject;
 };
 
-type Channels = 'LoadKeyBinds';
+type ProfileData = {
+  name: string;
+  email: string;
+  password: string;
+  pictureData: string;
+};
+
+type ChannelName =
+  | 'LoadKeyBinds'
+  | 'SelectProfilePicture'
+  | 'SaveProfileData'
+  | 'VerifyLogin';
 type ChannelObject = {
-  LoadKeyBinds: Channels;
+  [key: string]: ChannelName;
+};
+
+type LoadKeyBindsResObject = { keyBinds: Bindings; maxChars: number };
+
+type VerifyLoginReqObject = {
+  email: string;
+  password: string;
 };
 
 type RegexObect = {
@@ -40,8 +58,9 @@ type FileDialogObject = {
 export {
   Bindings,
   KeyBindingObject,
-  Channels,
   ChannelObject,
-  RegexObject,
   FileDialogObject,
+  RegexObect,
+  VerifyLoginReqObject,
+  LoadKeyBindsResObject,
 };

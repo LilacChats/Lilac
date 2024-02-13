@@ -1,6 +1,6 @@
-import InputBox from './InputBox.tsx';
-import ProfilePicture from './ProfilePicture.tsx';
-import Button from './Button.tsx';
-import ControlButton from './ControlButton.tsx';
+import InputBox from './InputBox';
+import ProfilePicture from './ProfilePicture';
+import Button from './Button';
+import ControlButton from './ControlButton';
 
 export { InputBox, ProfilePicture, Button, ControlButton };

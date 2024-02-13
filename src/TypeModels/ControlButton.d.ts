@@ -1,2 +1,6 @@
-type ControlButtonProps = { lastPage: boolean; setPage: Function };
+type ControlButtonProps = {
+  lastPage: boolean;
+  setPage: Function;
+  loginPage: boolean;
+};
 export { ControlButtonProps };

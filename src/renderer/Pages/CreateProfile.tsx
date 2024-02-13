@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { CreateProfileProps } from '../../TypeModels/CreateProfileModel.d.ts';
-import { ProfilePicture, InputBox } from '../Components/Components.tsx';
-import { PLACEHOLDERS } from '../../objs.ts';
+import { CreateProfileProps } from '../../TypeModels/CreateProfileModel';
+import { ProfilePicture, InputBox } from '../Components/Components';
+import { PLACEHOLDERS } from '../../objs';
 import {
   useKeyBindsContext,
   useProfileCreationBreakerContext,
-} from '../Contexts.tsx';
-import Button from '../Components/Button.tsx';
-import EULABox from '../Components/EULABox.tsx';
+} from '../Contexts';
+import Button from '../Components/Button';
+import EULABox from '../Components/EULABox';
 import '../Styles/CreateProfile.css';
 import '../Styles/HomePage.css';
 

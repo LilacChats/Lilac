@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { EMPTY_BINDINGS_OBJECT } from '../objs.ts';
+import { Bindings } from '../TypeModels/MainTypes';
+import { EMPTY_BINDINGS_OBJECT, KeyBindingContextType } from '../objs';
 
-const KeyBindsContext = createContext();
-const ProfileCreationBreakerContext = createContext();
-const ProfileInfoContext = createContext();
+const KeyBindsContext: React.Context<any> = createContext({});
+const ProfileCreationBreakerContext: React.Context<any> = createContext({});
+const ProfileInfoContext: React.Context<any> = createContext({});
 
-const ProfileInfoProvider = ({ children }) => {
+const ProfileInfoProvider: React.FC<any> = ({ children }) => {
   const [pictureData, setPictureData] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
@@ -31,7 +32,7 @@ const ProfileInfoProvider = ({ children }) => {
   );
 };
 
-const ProfileCreationBreakerProvider = ({ children }) => {
+const ProfileCreationBreakerProvider: React.FC<any> = ({ children }) => {
   const [breakState, setBreakState] = useState<boolean>(false);
   return (
     <ProfileCreationBreakerContext.Provider
@@ -42,8 +43,8 @@ const ProfileCreationBreakerProvider = ({ children }) => {
   );
 };
 
-const KeyBindsProvider = ({ children }) => {
-  const [keyBinds, setKeyBinds] = useState<any>(EMPTY_BINDINGS_OBJECT);
+const KeyBindsProvider: React.FC<any> = ({ children }) => {
+  const [keyBinds, setKeyBinds] = useState<Bindings>(EMPTY_BINDINGS_OBJECT);
   const [maxChars, setMaxChars] = useState<number>(0);
   return (
     <KeyBindsContext.Provider

@@ -1,14 +1,12 @@
-import {
-  Bindings,
-  ChannelObject,
-  RegexObject,
-} from './TypeModels/MainTypes.d.ts';
-import ProfilePicture from './renderer/Components/ProfilePicture.tsx';
-import InputBox from './renderer/Components/InputBox.tsx';
+import { Bindings, ChannelObject, RegexObect } from './TypeModels/MainTypes';
+import ProfilePicture from './renderer/Components/ProfilePicture';
+import InputBox from './renderer/Components/InputBox';
 
 const CHANNELS: ChannelObject = {
   LoadKeyBinds: 'LoadKeyBinds',
   SelectProfilePicture: 'SelectProfilePicture',
+  SaveProfileData: 'SaveProfileData',
+  VerifyLogin: 'VerifyLogin',
 };
 
 const EMPTY_BINDINGS_OBJECT: Bindings = {
@@ -33,10 +31,24 @@ const PLACEHOLDERS = {
   server: 'Server URL Eg: https://hellokitty.com',
 };
 
-const REGEX_STRINGS: RegexObject = {
+const REGEX_STRINGS: RegexObect = {
   EMAIL: new RegExp(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9._%+-]+$`),
   NAME: new RegExp(`^[a-zA-Z ]+$`),
   SERVER_URL: new RegExp(`^http(s)?://\\S+$`),
 };
 
-export { CHANNELS, EMPTY_BINDINGS_OBJECT, PAGES, PLACEHOLDERS, REGEX_STRINGS };
+type KeyBindingContextType = {
+  keyBinds: Bindings;
+  maxChars: number;
+  setMaxChars: Function;
+  setKeyBinds: Function;
+};
+
+export {
+  CHANNELS,
+  EMPTY_BINDINGS_OBJECT,
+  PAGES,
+  PLACEHOLDERS,
+  REGEX_STRINGS,
+  KeyBindingContextType,
+};

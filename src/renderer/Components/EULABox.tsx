@@ -1,6 +1,6 @@
 import React from 'react';
 import Markdown from 'react-markdown';
-import { EULABoxProps } from '../../TypeModels/EULABoxModel.d.ts';
+import { EULABoxProps } from '../../TypeModels/EULABoxModel';
 import '../Styles/EULABox.css';
 
 const EULABox: React.FC<EULABoxProps> = ({ content }) => {

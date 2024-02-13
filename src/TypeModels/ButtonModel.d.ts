@@ -1,7 +1,7 @@
 type ButtonProps = {
   label: string;
   keybinding: string;
-  onClick: Function;
+  onClick?: Function;
 };
 
 export { ButtonProps };

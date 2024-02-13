@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ControlButtonProps } from '../../TypeModels/ControlButton.d.ts';
-import Button from '../Components/Button.tsx';
-import { ControlButtonProps } from '../../TypeModels/ControlButton.d.ts';
-import { useKeyBindsContext } from '../Contexts.tsx';
+import Button from '../Components/Button';
+import { ControlButtonProps } from '../../TypeModels/ControlButton';
+import { useKeyBindsContext } from '../Contexts';
 import '../Styles/ControlButton.css';
-const ControlButton: React.FC<ControlButtonProps> = ({ lastPage, setPage }) => {
-  const { keyBinds, setKeyBinds } = useKeyBindsContext();
+const ControlButton: React.FC<ControlButtonProps> = ({
+  loginPage,
+  lastPage,
+  setPage,
+}) => {
+  const { keyBinds } = useKeyBindsContext();
   return (
     <div className="BackContainer">
       <Button
@@ -15,7 +18,7 @@ const ControlButton: React.FC<ControlButtonProps> = ({ lastPage, setPage }) => {
           setPage('backward');
         }}
       />
-      {!lastPage ? (
+      {!lastPage && !loginPage ? (
         <Button
           label={keyBinds.FORWARD.name}
           keybinding={keyBinds.FORWARD.keyCombination}
@@ -23,7 +26,15 @@ const ControlButton: React.FC<ControlButtonProps> = ({ lastPage, setPage }) => {
             setPage('forward');
           }}
         />
-      ) : null}
+      ) : (
+        <Button
+          label={keyBinds.LOGIN.name}
+          keybinding={keyBinds.LOGIN.keyCombination}
+          onClick={() => {
+            setPage('triggerLogin');
+          }}
+        />
+      )}
     </div>
   );
 };

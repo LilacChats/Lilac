@@ -1,27 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../Components/Components.tsx';
+import { Button } from '../Components/Components';
 import {
   validateName,
   validateEmail,
   validateServerURL,
-} from '../../validator.ts';
+} from '../../validator';
 import {
   useKeyBindsContext,
   useProfileInfoContext,
   useProfileCreationBreakerContext,
-} from '../Contexts.tsx';
-import ControlButton from '../Components/ControlButton.tsx';
-import CreateProfile from './CreateProfile.tsx';
-import { HomePageProps } from '../../TypeModels/HomePageProps.d.ts';
-import IndicatorContainer from '../Components/IndicatorContainer.tsx';
-import { CHANNELS, PAGES } from '../../objs.ts';
+} from '../Contexts';
+import ControlButton from '../Components/ControlButton';
+import CreateProfile from './CreateProfile';
+import Login from './Login';
+import IndicatorContainer from '../Components/IndicatorContainer';
+import { CHANNELS, PAGES } from '../../objs';
 import '../Styles/HomePage.css';
+import { LoadKeyBindsResObject } from '../../TypeModels/MainTypes';
 
 const HomePage = () => {
   const { keyBinds, setKeyBinds, setMaxChars } = useKeyBindsContext();
-  const { name, email, password, serverURL } = useProfileInfoContext();
+  const {
+    name,
+    pictureData,
+    email,
+    password,
+    serverURL,
+    setName,
+    setPictureData,
+    setEmail,
+    setServerURL,
+  } = useProfileInfoContext();
   const { breakState, setBreakState } = useProfileCreationBreakerContext();
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [loginPageControlButtonState, setLoginPageControlButtonState] =
+    useState<boolean>(false);
   const [createProfilePage, setCreateProfilePage] = useState<number>(-1);
   const [controlButtonState, setControlButtonState] = useState<boolean>(true);
   const [emailFieldErrorState, setEmailFieldErrorState] =
@@ -32,16 +45,40 @@ const HomePage = () => {
     useState<boolean>(false);
   const [serverURLFieldErrorState, setServerURLFieldErrorState] =
     useState<boolean>(false);
-  window.electron.ipcRenderer.once(CHANNELS.LoadKeyBinds, (args) => {
+  const [loginEmailFieldErrorState, setLoginEmailFieldErrorState] =
+    useState<boolean>(false);
+  const [loginPasswordFieldErrorState, setLoginPasswordFieldErrorState] =
+    useState<boolean>(false);
+  const [loginServerURLFieldErrorState, setLoginServerURLFieldErrorState] =
+    useState<boolean>(false);
+  window.electron.ipcRenderer.once(CHANNELS.LoadKeyBinds, (args: any) => {
     setKeyBinds(args.keyBinds);
     setMaxChars(args.maxChars);
+  });
+
+  window.electron.ipcRenderer.once(CHANNELS.VerifyLogin, (args: any) => {
+    if (
+      args.validationObject.emailValid &&
+      args.validationObject.passwordValid
+    ) {
+      setName(args.data.name);
+      setEmail(args.data.email);
+      setPictureData(args.data.pictureData);
+      setCurrentPage(1);
+    } else {
+      manageErrorState(-2, true, args.validationObject);
+    }
   });
 
   useEffect(() => {
     window.electron.ipcRenderer.sendMessage(CHANNELS.LoadKeyBinds, {});
   }, []);
 
-  function manageErrorState(page) {
+  function manageErrorState(
+    page: number,
+    overrideValidation: boolean = false,
+    attachedOverrideParams: any = {},
+  ) {
     if (page == 1) {
       if (!validateEmail(email)) {
         setEmailFieldErrorState(false);
@@ -68,6 +105,58 @@ const HomePage = () => {
           setServerURLFieldErrorState(true);
         }, 100);
       } else setServerURLFieldErrorState(false);
+    } else if (page == -2) {
+      if (!overrideValidation) {
+        let emailStatus: boolean = false,
+          passwordStatus: boolean = false,
+          serverURLStatus: boolean = false;
+        if (!validateServerURL(serverURL)) {
+          setLoginServerURLFieldErrorState(false);
+          setTimeout(() => {
+            setLoginServerURLFieldErrorState(true);
+          }, 100);
+        } else {
+          serverURLStatus = true;
+          setLoginServerURLFieldErrorState(false);
+        }
+        if (!validateEmail(email)) {
+          setLoginEmailFieldErrorState(false);
+          setTimeout(() => {
+            setLoginEmailFieldErrorState(true);
+          }, 100);
+        } else {
+          emailStatus = true;
+          setLoginEmailFieldErrorState(false);
+        }
+        if (password == '') {
+          setLoginPasswordFieldErrorState(false);
+          setTimeout(() => {
+            setLoginPasswordFieldErrorState(true);
+          }, 100);
+        } else {
+          passwordStatus = true;
+          setLoginPasswordFieldErrorState(false);
+        }
+        if (emailStatus && passwordStatus && serverURLStatus) {
+          window.electron.ipcRenderer.sendMessage(CHANNELS.VerifyLogin, {
+            email: email,
+            password: password,
+          });
+        }
+      } else {
+        if (!attachedOverrideParams.emailValid) {
+          setLoginEmailFieldErrorState(false);
+          setTimeout(() => {
+            setLoginEmailFieldErrorState(true);
+          }, 100);
+        }
+        if (!attachedOverrideParams.passwordValid) {
+          setLoginPasswordFieldErrorState(false);
+          setTimeout(() => {
+            setLoginPasswordFieldErrorState(true);
+          }, 100);
+        }
+      }
     }
   }
 
@@ -75,16 +164,31 @@ const HomePage = () => {
     <>
       {currentPage == 0 ? (
         <>
-          {controlButtonState && createProfilePage > -1 ? (
+          {controlButtonState &&
+          (createProfilePage == -2 || createProfilePage > -1) ? (
             <ControlButton
-              lastPage={createProfilePage == PAGES - 1 ? true : false}
-              setPage={(direction) => {
+              loginPage={loginPageControlButtonState}
+              lastPage={
+                createProfilePage == PAGES - 1
+                  ? true
+                  : createProfilePage == -2
+                  ? true
+                  : false
+              }
+              setPage={(direction: string) => {
                 if (direction === 'forward') {
-                  if (!breakState) {
+                  if (!breakState || createProfilePage == 0) {
                     setCreateProfilePage(createProfilePage + 1);
                   }
                   manageErrorState(createProfilePage);
-                } else setCreateProfilePage(createProfilePage - 1);
+                } else if (direction === 'backward') {
+                  setLoginPageControlButtonState(false);
+                  if (createProfilePage >= -1)
+                    setCreateProfilePage(createProfilePage - 1);
+                  else setCreateProfilePage(-1);
+                } else if (direction === 'triggerLogin') {
+                  manageErrorState(createProfilePage);
+                }
                 // if (createProfilePage == PAGES - 1 && direction === 'forward')
                 //   setCurrentPage(1);
               }}
@@ -100,11 +204,20 @@ const HomePage = () => {
                 serverURLErrorState={serverURLFieldErrorState}
                 acceptAgreement={() => {
                   setCurrentPage(1);
+                  window.electron.ipcRenderer.sendMessage(
+                    CHANNELS.SaveProfileData,
+                    {
+                      name: name,
+                      email: email,
+                      password: password,
+                      pictureData: pictureData,
+                    },
+                  );
                 }}
               />
               <IndicatorContainer activePointer={createProfilePage} />
             </>
-          ) : (
+          ) : createProfilePage == -1 ? (
             <>
               <div className="HomePage">
                 <div className="Title">Welcome to Lilac</div>
@@ -118,9 +231,19 @@ const HomePage = () => {
                 <Button
                   label={keyBinds.LOGIN.name}
                   keybinding={keyBinds.LOGIN.keyCombination}
+                  onClick={() => {
+                    setCreateProfilePage(-2);
+                    setLoginPageControlButtonState(true);
+                  }}
                 />
               </div>
             </>
+          ) : (
+            <Login
+              emailErrorState={loginEmailFieldErrorState}
+              passwordErrorState={loginPasswordFieldErrorState}
+              serverURLErrorState={loginServerURLFieldErrorState}
+            />
           )}
         </>
       ) : (
