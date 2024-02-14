@@ -1,6 +1,6 @@
 type ButtonProps = {
   label: string;
-  keybinding: string;
+  keybinding: string[];
   onClick?: Function;
 };
 

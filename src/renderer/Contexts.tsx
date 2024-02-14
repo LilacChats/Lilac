@@ -1,10 +1,24 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { Bindings } from '../TypeModels/MainTypes';
-import { EMPTY_BINDINGS_OBJECT, KeyBindingContextType } from '../objs';
+import {
+  Bindings,
+  KeyBindsContextParams,
+  ProfileCreationBreakerContextParams,
+  ProfileInfoContextParams,
+} from '../TypeModels/MainTypes';
+import {
+  EMPTY_BINDINGS_OBJECT,
+  INITIAL_KEYBINDS_CONTEXT_OBJECT,
+  INITIAL_PROFILECREATIONBREAKER_CONTEXT_OBJECT,
+  INITIAL_PROFILEINFO_CONTEXT_OBJECT,
+} from '../objs';
 
-const KeyBindsContext: React.Context<any> = createContext({});
-const ProfileCreationBreakerContext: React.Context<any> = createContext({});
-const ProfileInfoContext: React.Context<any> = createContext({});
+const KeyBindsContext: React.Context<KeyBindsContextParams> = createContext(
+  INITIAL_KEYBINDS_CONTEXT_OBJECT,
+);
+const ProfileCreationBreakerContext: React.Context<ProfileCreationBreakerContextParams> =
+  createContext(INITIAL_PROFILECREATIONBREAKER_CONTEXT_OBJECT);
+const ProfileInfoContext: React.Context<ProfileInfoContextParams> =
+  createContext(INITIAL_PROFILEINFO_CONTEXT_OBJECT);
 
 const ProfileInfoProvider: React.FC<any> = ({ children }) => {
   const [pictureData, setPictureData] = useState<string>('');

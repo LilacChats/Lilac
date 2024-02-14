@@ -28,6 +28,7 @@ const InputBox: React.FC<InputBoxProps> = ({
     serverURL,
     setServerURL,
   } = useProfileInfoContext();
+  const [message, setMessage] = useState<string>('');
   const [inputClass, setInputClass] = useState<string>('InputText');
   useEffect(() => {
     if (type === 'name' || type === 'email' || type === 'password') {
@@ -48,10 +49,16 @@ const InputBox: React.FC<InputBoxProps> = ({
     if (errorState) setInputClass('InputTextErrorState');
   }, [errorState]);
   return (
-    <div className="InputContainer">
+    <div
+      className="InputContainer"
+      style={{ width: type == 'chat' ? '100%' : 'fit-content' }}
+    >
       <input
         type={
-          type === 'email' || type === 'name' || type === 'server'
+          type === 'email' ||
+          type === 'name' ||
+          type === 'server' ||
+          type == 'chat'
             ? 'text'
             : 'password'
         }
@@ -65,7 +72,9 @@ const InputBox: React.FC<InputBoxProps> = ({
             ? name
             : type === 'password'
             ? password
-            : serverURL
+            : type === 'server'
+            ? serverURL
+            : message
         }
         onChange={(e) => {
           if (e.target.value != '') setInputClass('InputText');
@@ -81,6 +90,9 @@ const InputBox: React.FC<InputBoxProps> = ({
               break;
             case 'server':
               setServerURL(e.target.value);
+              break;
+            case 'chat':
+              setMessage(e.target.value);
               break;
             default:
               break;

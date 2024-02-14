@@ -4,7 +4,7 @@ type KeyBindingObject = {
 };
 
 type Bindings = {
-  NEW_CHAT: KeyBindingObject;
+  CHATS: KeyBindingObject;
   NEW_GROUP: KeyBindingObject;
   OPEN_SETTINGS: KeyBindingObject;
   SHOW_KEY_BINDS: KeyBindingObject;
@@ -14,6 +14,7 @@ type Bindings = {
   LOGIN: KeyBindingObject;
   ACCEPT_AGREEMENT: KeyBindingObject;
   REJECT_AGREEMENT: KeyBindingObject;
+  SEND_CHAT: KeyBindingObject;
 };
 
 type ControlButtonStateObject = {
@@ -56,6 +57,31 @@ type FileDialogObject = {
   canceled: boolean;
 };
 
+type KeyBindsContextParams = {
+  keyBinds: Bindings;
+  maxChars: number;
+  setKeyBinds: (keyBinds: Bindings) => void;
+  setMaxChars: (maxChars: number) => void;
+};
+
+type ProfileCreationBreakerContextParams = {
+  breakState: boolean;
+  setBreakState: (breakState: boolean) => void;
+};
+
+type ProfileInfoContextParams = {
+  name: string;
+  setName: (name: string) => void;
+  email: string;
+  setEmail: (email: string) => void;
+  password: string;
+  setPassword: (password: string) => void;
+  serverURL: string;
+  setServerURL: (serverURL: string) => void;
+  pictureData: string;
+  setPictureData: (pictureData: string) => void;
+};
+
 export {
   Bindings,
   KeyBindingObject,
@@ -64,4 +90,7 @@ export {
   RegexObect,
   VerifyLoginReqObject,
   LoadKeyBindsResObject,
+  KeyBindsContextParams,
+  ProfileCreationBreakerContextParams,
+  ProfileInfoContextParams,
 };

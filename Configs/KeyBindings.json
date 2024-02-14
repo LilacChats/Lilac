@@ -1,42 +1,46 @@
 {
-  "NEW_CHAT":{
-    "name":"New Chat",
-    "keyCombination": ["/","n","c"]
+  "CHATS": {
+    "name": "Chats",
+    "keyCombination": ["/", "c"]
   },
-  "NEW_GROUP":{
+  "NEW_GROUP": {
     "name": "New Group",
-    "keyCombination":["/","n","g"]
+    "keyCombination": ["/", "n", "g"]
   },
-  "OPEN_SETTINGS":{
+  "OPEN_SETTINGS": {
     "name": "Settings",
-    "keyCombination":["/","o","s"]
+    "keyCombination": ["/", "o", "s"]
   },
-  "SHOW_KEY_BINDS":  {
+  "SHOW_KEY_BINDS": {
     "name": "Key Binds",
-    "keyCombination": ["/","k","b"]
+    "keyCombination": ["/", "k", "b"]
   },
-  "BACK":{
+  "BACK": {
     "name": "Back",
-    "keyCombination": ["/","b"]
+    "keyCombination": ["/", "b"]
   },
-  "FORWARD":{
+  "FORWARD": {
     "name": "Next",
-    "keyCombination": ["/","f"]
+    "keyCombination": ["/", "f"]
   },
   "SIGNUP": {
     "name": "Signup",
-    "keyCombination": ["/","s"]
+    "keyCombination": ["/", "s"]
   },
   "LOGIN": {
     "name": "Login",
-    "keyCombination": ["/","l"]
+    "keyCombination": ["/", "l"]
   },
-  "ACCEPT_AGREEMENT":{
+  "ACCEPT_AGREEMENT": {
     "name": "Accept",
-    "keyCombination":["/","a","a"]
+    "keyCombination": ["/", "a", "a"]
   },
   "REJECT_AGREEMENT": {
     "name": "Reject",
-    "keyCombination": ["/","r","a"]
+    "keyCombination": ["/", "r", "a"]
+  },
+  "SEND_CHAT": {
+    "name": "Send",
+    "keyCombination": ["/", "s", "m"]
   }
 }

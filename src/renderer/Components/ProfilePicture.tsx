@@ -4,7 +4,11 @@ import { useProfileInfoContext } from '../Contexts';
 import { CHANNELS } from '../../objs';
 import '../Styles/ProfilePicture.css';
 
-const ProfilePicture: React.FC<ProfilePictureProps> = ({ style }) => {
+const ProfilePicture: React.FC<ProfilePictureProps> = ({
+  style,
+  overridePicture = false,
+  overrideData = '',
+}) => {
   const { pictureData, setPictureData } = useProfileInfoContext();
   window.electron.ipcRenderer.once(
     CHANNELS.SelectProfilePicture,
@@ -14,20 +18,23 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({ style }) => {
     },
   );
   useEffect(() => {
-    // console.log(pictureData);
-  }, [pictureData]);
+    if (overridePicture) setPictureData(overrideData);
+  }, []);
+
   return (
     <div
+      style={style}
       className={
         pictureData == ''
           ? 'UnselectedPictureProfileContainer'
           : 'SelectedPictureProfileContainer'
       }
       onClick={() => {
-        window.electron.ipcRenderer.sendMessage(
-          CHANNELS.SelectProfilePicture,
-          {},
-        );
+        if (!overridePicture)
+          window.electron.ipcRenderer.sendMessage(
+            CHANNELS.SelectProfilePicture,
+            {},
+          );
       }}
     >
       {pictureData == '' ? (

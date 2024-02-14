@@ -29,3 +29,15 @@ input[type='password'] {
   appearance: none;
   outline: none;
 }
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 5px;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  width: 10px;
+}

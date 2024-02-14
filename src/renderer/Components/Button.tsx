@@ -12,7 +12,9 @@ const Button: React.FC<ButtonProps> = ({
     <div
       className="ButtonContainer"
       style={{
-        borderColor: hoverState ? 'mediumpurple' : 'transparent',
+        // borderColor: hoverState ? 'mediumpurple' : 'mediumpurple',
+        border: `2px dashed`,
+        color: hoverState ? 'mediumpurple' : '#272727',
       }}
       onMouseEnter={() => {
         setHoverState(true);
@@ -29,8 +31,7 @@ const Button: React.FC<ButtonProps> = ({
           className="KeyBinding"
           style={{
             borderColor: hoverState ? 'mediumpurple' : '#9f9f9f',
-            color: hoverState ? '#272727' : '#9f9f9f',
-            backgroundColor: hoverState ? 'mediumpurple' : 'transparent',
+            color: hoverState ? 'mediumpurple' : '#9f9f9f',
           }}
         >
           {keybinding}

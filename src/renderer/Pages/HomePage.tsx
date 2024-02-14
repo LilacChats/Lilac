@@ -17,6 +17,7 @@ import IndicatorContainer from '../Components/IndicatorContainer';
 import { CHANNELS, PAGES } from '../../objs';
 import '../Styles/HomePage.css';
 import { LoadKeyBindsResObject } from '../../TypeModels/MainTypes';
+import ChatPage from './ChatPage';
 
 const HomePage = () => {
   const { keyBinds, setKeyBinds, setMaxChars } = useKeyBindsContext();
@@ -259,14 +260,17 @@ const HomePage = () => {
             />
           )}
         </>
-      ) : (
+      ) : currentPage == 1 ? (
         <div className="HomePage">
           <div className="Title">Welcome to Lilac</div>
           <div className="MainContainer">
             <div className="SubContainer">
               <Button
-                label={keyBinds.NEW_CHAT.name}
-                keybinding={keyBinds.NEW_CHAT.keyCombination}
+                label={keyBinds.CHATS.name}
+                keybinding={keyBinds.CHATS.keyCombination}
+                onClick={() => {
+                  setCurrentPage(2);
+                }}
               />
               <Button
                 label={keyBinds.NEW_GROUP.name}
@@ -285,7 +289,9 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      )}
+      ) : currentPage == 2 ? (
+        <ChatPage />
+      ) : null}
     </>
   );
 };
