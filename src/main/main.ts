@@ -10,11 +10,13 @@
  */
 import path from 'path';
 import fs from 'fs';
+import axios from 'axios';
 import { dialog, app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import { CHANNELS } from '../objs';
 import {
   FileDialogObject,
+  Signup_Request_Object,
   VerifyLoginReqObject,
 } from '../TypeModels/MainTypes';
 import log from 'electron-log';
@@ -74,13 +76,27 @@ function fileExistsSync(filePath: string): boolean {
 
 ipcMain.on(CHANNELS.Override_INSECURE, async (event, arg: any) => {
   if (fileExistsSync(process.cwd() + '\\src\\UserFiles\\AccountData.json')) {
-    let profileData = require(
-      process.cwd() + '\\src\\UserFiles\\AccountData.json',
+    var response = dialog.showMessageBoxSync(
+      mainWindow ? mainWindow : new BrowserWindow({ width: 500, height: 200 }),
+      {
+        noLink: true,
+        type: 'warning',
+        message: 'ACCOUNT INFORMATION FOUND!\n\n\nEngage INSECURE OVERRIDE?',
+        buttons: ['Confirm', 'Deny'],
+        title: 'INSECURE OVERRIDE TRIGGERED',
+      },
     );
-    event.reply(CHANNELS.Override_INSECURE, {
-      override: true,
-      data: profileData,
-    });
+    if (response == 0) {
+      let profileData = require(
+        process.cwd() + '\\src\\UserFiles\\AccountData.json',
+      );
+      event.reply(CHANNELS.Override_INSECURE, {
+        override: true,
+        data: profileData,
+      });
+    } else {
+      process.exit(1);
+    }
   } else {
     event.reply(CHANNELS.Override_INSECURE, {
       override: false,
@@ -105,16 +121,22 @@ ipcMain.on(CHANNELS.VerifyLogin, async (event, arg) => {
   });
 });
 
-ipcMain.on(CHANNELS.SaveProfileData, async (event, arg) => {
-  console.log(arg);
-  fs.writeFile(
-    process.cwd() + '\\src\\UserFiles\\AccountData.json',
-    JSON.stringify(arg, null, 2),
-    (err) => {
-      //handle error here
-    },
-  );
-});
+ipcMain.on(
+  CHANNELS.SaveProfileData,
+  async (event, arg: Signup_Request_Object) => {
+    console.log(arg);
+    fs.writeFile(
+      process.cwd() + '\\src\\UserFiles\\AccountData.json',
+      JSON.stringify(arg, null, 2),
+      (err) => {
+        //handle error here
+      },
+    );
+    axios.post(arg.serverURL, arg).then((res) => {
+      event.reply(CHANNELS.SaveProfileData, { id: res.data.id });
+    });
+  },
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

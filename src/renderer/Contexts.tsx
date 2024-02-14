@@ -26,6 +26,7 @@ const ProfileInfoProvider: React.FC<any> = ({ children }) => {
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [serverURL, setServerURL] = useState<string>('');
+  const [id, setID] = useState<string>('');
   return (
     <ProfileInfoContext.Provider
       value={{
@@ -39,6 +40,8 @@ const ProfileInfoProvider: React.FC<any> = ({ children }) => {
         setPassword,
         pictureData,
         setPictureData,
+        id,
+        setID,
       }}
     >
       {children}

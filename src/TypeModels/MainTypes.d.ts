@@ -80,6 +80,20 @@ type ProfileInfoContextParams = {
   setServerURL: (serverURL: string) => void;
   pictureData: string;
   setPictureData: (pictureData: string) => void;
+  id: string;
+  setID: (id: string) => void;
+};
+
+type Signup_Request_Object = {
+  name: string;
+  password: string;
+  email: string;
+  pictureData: string;
+  serverURL: string;
+};
+
+type Signup_Response_Object = {
+  id: string;
 };
 
 export {
@@ -93,4 +107,6 @@ export {
   KeyBindsContextParams,
   ProfileCreationBreakerContextParams,
   ProfileInfoContextParams,
+  Signup_Request_Object,
+  Signup_Response_Object,
 };

@@ -61,11 +61,13 @@ const INITIAL_PROFILECREATIONBREAKER_CONTEXT_OBJECT: ProfileCreationBreakerConte
   };
 
 const INITIAL_PROFILEINFO_CONTEXT_OBJECT: ProfileInfoContextParams = {
+  id: '',
   name: '',
   email: '',
   password: '',
   serverURL: '',
   pictureData: '',
+  setID: (id: string) => {},
   setName: (name: string) => {},
   setEmail: (email: string) => {},
   setPassword: (password: string) => {},

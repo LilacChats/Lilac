@@ -16,7 +16,10 @@ import Login from './Login';
 import IndicatorContainer from '../Components/IndicatorContainer';
 import { CHANNELS, PAGES } from '../../objs';
 import '../Styles/HomePage.css';
-import { LoadKeyBindsResObject } from '../../TypeModels/MainTypes';
+import {
+  LoadKeyBindsResObject,
+  Signup_Response_Object,
+} from '../../TypeModels/MainTypes';
 import ChatPage from './ChatPage';
 
 const HomePage = () => {
@@ -27,6 +30,7 @@ const HomePage = () => {
     email,
     password,
     serverURL,
+    setID,
     setName,
     setPictureData,
     setEmail,
@@ -81,6 +85,11 @@ const HomePage = () => {
       setServerURL(args.data.serverURL);
       setCurrentPage(1);
     }
+  });
+
+  window.electron.ipcRenderer.once(CHANNELS.SaveProfileData, (args: any) => {
+    var response: Signup_Response_Object = { id: args.id };
+    setID(response.id);
   });
 
   useEffect(() => {
@@ -225,6 +234,7 @@ const HomePage = () => {
                       email: email,
                       password: password,
                       pictureData: pictureData,
+                      serverURL: serverURL,
                     },
                   );
                 }}
