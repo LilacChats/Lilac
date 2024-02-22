@@ -60,11 +60,19 @@ const SignupPage: React.FC<SignupPageProps> = (props) => {
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // const handleKeyPress
+  const handleKeyPress = (e: any) => {
+    console.log(e.key);
+    if (e.key == 'Escape') {
+      handleBackwardMotion();
+    }
+  };
 
-  // useEffect(() => {
-  //   window.addEventListener("keypress",)
-  // }, []);
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
 
   useEffect(() => {
     refreshComponent(setNameValidationString, 'name', false);
@@ -272,7 +280,7 @@ const SignupPage: React.FC<SignupPageProps> = (props) => {
             color: '#989898',
           }}
         >
-          <div>Enter</div>
+          <div>Press</div>
           <div
             style={{
               display: 'flex',
@@ -285,7 +293,7 @@ const SignupPage: React.FC<SignupPageProps> = (props) => {
               letterSpacing: '1.5px',
             }}
           >
-            {keyBinds.BACK.keyCombination}
+            {'esc'}
           </div>
           <div>to go back</div>
         </div>
