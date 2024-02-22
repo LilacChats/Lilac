@@ -11,17 +11,13 @@
 import path from 'path';
 import fs from 'fs';
 import axios from 'axios';
+import { CHANNELS } from '../objs';
 import { dialog, app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import { CHANNELS } from '../objs';
-import {
-  FileDialogObject,
-  Signup_Request_Object,
-  VerifyLoginReqObject,
-} from '../TypeModels/MainTypes';
 import log from 'electron-log';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { FileDialogObject } from '../types';
 
 class AppUpdater {
   constructor() {
@@ -65,78 +61,78 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
     });
 });
 
-function fileExistsSync(filePath: string): boolean {
-  try {
-    fs.accessSync(filePath, fs.constants.F_OK);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
+// function fileExistsSync(filePath: string): boolean {
+//   try {
+//     fs.accessSync(filePath, fs.constants.F_OK);
+//     return true;
+//   } catch (err) {
+//     return false;
+//   }
+// }
 
-ipcMain.on(CHANNELS.Override_INSECURE, async (event, arg: any) => {
-  if (fileExistsSync(process.cwd() + '\\src\\UserFiles\\AccountData.json')) {
-    var response = dialog.showMessageBoxSync(
-      mainWindow ? mainWindow : new BrowserWindow({ width: 500, height: 200 }),
-      {
-        noLink: true,
-        type: 'warning',
-        message: 'ACCOUNT INFORMATION FOUND!\n\n\nEngage INSECURE OVERRIDE?',
-        buttons: ['Confirm', 'Deny'],
-        title: 'INSECURE OVERRIDE TRIGGERED',
-      },
-    );
-    if (response == 0) {
-      let profileData = require(
-        process.cwd() + '\\src\\UserFiles\\AccountData.json',
-      );
-      event.reply(CHANNELS.Override_INSECURE, {
-        override: true,
-        data: profileData,
-      });
-    } else {
-      process.exit(1);
-    }
-  } else {
-    event.reply(CHANNELS.Override_INSECURE, {
-      override: false,
-      data: null,
-    });
-  }
-});
+// ipcMain.on(CHANNELS.Override_INSECURE, async (event, arg: any) => {
+//   if (fileExistsSync(process.cwd() + '\\src\\UserFiles\\AccountData.json')) {
+//     var response = dialog.showMessageBoxSync(
+//       mainWindow ? mainWindow : new BrowserWindow({ width: 500, height: 200 }),
+//       {
+//         noLink: true,
+//         type: 'warning',
+//         message: 'ACCOUNT INFORMATION FOUND!\n\n\nEngage INSECURE OVERRIDE?',
+//         buttons: ['Confirm', 'Deny'],
+//         title: 'INSECURE OVERRIDE TRIGGERED',
+//       },
+//     );
+//     if (response == 0) {
+//       let profileData = require(
+//         process.cwd() + '\\src\\UserFiles\\AccountData.json',
+//       );
+//       event.reply(CHANNELS.Override_INSECURE, {
+//         override: true,
+//         data: profileData,
+//       });
+//     } else {
+//       process.exit(1);
+//     }
+//   } else {
+//     event.reply(CHANNELS.Override_INSECURE, {
+//       override: false,
+//       data: null,
+//     });
+//   }
+// });
 
-ipcMain.on(CHANNELS.VerifyLogin, async (event, arg) => {
-  let profileData = require(
-    process.cwd() + '\\src\\UserFiles\\AccountData.json',
-  );
-  event.reply(CHANNELS.VerifyLogin, {
-    validationObject: {
-      emailValid: arg.email == profileData.email ? true : false,
-      passwordValid: arg.password == profileData.password ? true : false,
-    },
-    data:
-      arg.email == profileData.email && arg.password == profileData.password
-        ? profileData
-        : {},
-  });
-});
+// ipcMain.on(CHANNELS.VerifyLogin, async (event, arg) => {
+//   let profileData = require(
+//     process.cwd() + '\\src\\UserFiles\\AccountData.json',
+//   );
+//   event.reply(CHANNELS.VerifyLogin, {
+//     validationObject: {
+//       emailValid: arg.email == profileData.email ? true : false,
+//       passwordValid: arg.password == profileData.password ? true : false,
+//     },
+//     data:
+//       arg.email == profileData.email && arg.password == profileData.password
+//         ? profileData
+//         : {},
+//   });
+// });
 
-ipcMain.on(
-  CHANNELS.SaveProfileData,
-  async (event, arg: Signup_Request_Object) => {
-    console.log(arg);
-    fs.writeFile(
-      process.cwd() + '\\src\\UserFiles\\AccountData.json',
-      JSON.stringify(arg, null, 2),
-      (err) => {
-        //handle error here
-      },
-    );
-    axios.post(arg.serverURL, arg).then((res) => {
-      event.reply(CHANNELS.SaveProfileData, { id: res.data.id });
-    });
-  },
-);
+// ipcMain.on(
+//   CHANNELS.SaveProfileData,
+//   async (event, arg: Signup_Request_Object) => {
+//     console.log(arg);
+//     fs.writeFile(
+//       process.cwd() + '\\src\\UserFiles\\AccountData.json',
+//       JSON.stringify(arg, null, 2),
+//       (err) => {
+//         //handle error here
+//       },
+//     );
+//     axios.post(arg.serverURL, arg).then((res) => {
+//       event.reply(CHANNELS.SaveProfileData, { id: res.data.id });
+//     });
+//   },
+// );
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

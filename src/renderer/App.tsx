@@ -1,25 +1,33 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import React from 'react';
-import {
-  KeyBindsProvider,
-  ProfileCreationBreakerProvider,
-  ProfileInfoProvider,
-} from './Contexts';
-import HomePage from './Pages/HomePage';
-import icon from '../../assets/icon.svg';
-import './App.css';
+import Home from './Pages/Home';
+import { AccountProvider, KeyBindsProvider } from './Contexts';
+import './Styles/App.css';
+import { useState } from 'react';
+import LoginPage from './Pages/Login';
+import { AppPages } from '../types';
+import SignupPage from './Pages/Signup';
 
 const App = () => {
+  const [pageState, setPageState] = useState<AppPages>('Login');
   return (
-    <ProfileInfoProvider>
-      <ProfileCreationBreakerProvider>
+    <div>
+      <AccountProvider>
         <KeyBindsProvider>
-          <div className="App">
-            <HomePage />
-          </div>
+          {pageState === 'Login' ? (
+            <LoginPage
+              triggerPageChange={(page) => {
+                setPageState(page);
+              }}
+            />
+          ) : (
+            <SignupPage
+              triggerPageChange={(page) => {
+                setPageState(page);
+              }}
+            />
+          )}
         </KeyBindsProvider>
-      </ProfileCreationBreakerProvider>
-    </ProfileInfoProvider>
+      </AccountProvider>
+    </div>
   );
 };
 

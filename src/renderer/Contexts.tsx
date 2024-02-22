@@ -1,90 +1,67 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext } from 'react';
 import {
-  Bindings,
-  KeyBindsContextParams,
-  ProfileCreationBreakerContextParams,
-  ProfileInfoContextParams,
-} from '../TypeModels/MainTypes';
-import {
-  EMPTY_BINDINGS_OBJECT,
-  INITIAL_KEYBINDS_CONTEXT_OBJECT,
-  INITIAL_PROFILECREATIONBREAKER_CONTEXT_OBJECT,
-  INITIAL_PROFILEINFO_CONTEXT_OBJECT,
+  EMPTY_KEYBINDS,
+  INITIAL_ACCOUNT_CONTEXT,
+  INITIAL_KEYBINDS_CONTEXT,
 } from '../objs';
+import { AccountContext, KeyBinds, KeyBindsContext } from '../types';
+import { useState } from 'react';
 
-const KeyBindsContext: React.Context<KeyBindsContextParams> = createContext(
-  INITIAL_KEYBINDS_CONTEXT_OBJECT,
+const KeyBindContext: React.Context<KeyBindsContext> = createContext(
+  INITIAL_KEYBINDS_CONTEXT,
 );
-const ProfileCreationBreakerContext: React.Context<ProfileCreationBreakerContextParams> =
-  createContext(INITIAL_PROFILECREATIONBREAKER_CONTEXT_OBJECT);
-const ProfileInfoContext: React.Context<ProfileInfoContextParams> =
-  createContext(INITIAL_PROFILEINFO_CONTEXT_OBJECT);
 
-const ProfileInfoProvider: React.FC<any> = ({ children }) => {
-  const [pictureData, setPictureData] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [serverURL, setServerURL] = useState<string>('');
-  const [id, setID] = useState<string>('');
+const AccountContext: React.Context<AccountContext> = createContext(
+  INITIAL_ACCOUNT_CONTEXT,
+);
+
+const KeyBindsProvider: React.FC<any> = ({ children }) => {
+  const [keyBinds, setKeyBinds] = useState<KeyBinds>(EMPTY_KEYBINDS);
   return (
-    <ProfileInfoContext.Provider
+    <KeyBindContext.Provider value={{ keyBinds, setKeyBinds }}>
+      {children}
+    </KeyBindContext.Provider>
+  );
+};
+
+const AccountProvider: React.FC<any> = ({ children }) => {
+  const [name, setName] = useState<string>(INITIAL_ACCOUNT_CONTEXT.name);
+  const [email, setEmail] = useState<string>(INITIAL_ACCOUNT_CONTEXT.email);
+  const [password, setPassword] = useState<string>(
+    INITIAL_ACCOUNT_CONTEXT.password,
+  );
+  const [pictureData, setPictureData] = useState<string>(
+    INITIAL_ACCOUNT_CONTEXT.pictureData,
+  );
+  const [serverURL, setServerURL] = useState<string>(
+    INITIAL_ACCOUNT_CONTEXT.serverURL,
+  );
+  return (
+    <AccountContext.Provider
       value={{
-        serverURL,
-        setServerURL,
-        email,
-        setEmail,
         name,
-        setName,
+        email,
         password,
-        setPassword,
         pictureData,
+        serverURL,
+        setName,
+        setEmail,
+        setPassword,
         setPictureData,
-        id,
-        setID,
+        setServerURL,
       }}
     >
       {children}
-    </ProfileInfoContext.Provider>
+    </AccountContext.Provider>
   );
 };
 
-const ProfileCreationBreakerProvider: React.FC<any> = ({ children }) => {
-  const [breakState, setBreakState] = useState<boolean>(false);
-  return (
-    <ProfileCreationBreakerContext.Provider
-      value={{ breakState, setBreakState }}
-    >
-      {children}
-    </ProfileCreationBreakerContext.Provider>
-  );
-};
-
-const KeyBindsProvider: React.FC<any> = ({ children }) => {
-  const [keyBinds, setKeyBinds] = useState<Bindings>(EMPTY_BINDINGS_OBJECT);
-  const [maxChars, setMaxChars] = useState<number>(0);
-  return (
-    <KeyBindsContext.Provider
-      value={{ keyBinds, setKeyBinds, maxChars, setMaxChars }}
-    >
-      {children}
-    </KeyBindsContext.Provider>
-  );
-};
-
-const useProfileInfoContext = () => useContext(ProfileInfoContext);
-const useKeyBindsContext = () => useContext(KeyBindsContext);
-const useProfileCreationBreakerContext = () =>
-  useContext(ProfileCreationBreakerContext);
+const useKeyBindsContext = () => useContext(KeyBindContext);
+const useAccountContext = () => useContext(AccountContext);
 
 export {
-  KeyBindsContext,
   KeyBindsProvider,
+  AccountProvider,
   useKeyBindsContext,
-  ProfileCreationBreakerContext,
-  useProfileCreationBreakerContext,
-  ProfileCreationBreakerProvider,
-  ProfileInfoContext,
-  useProfileInfoContext,
-  ProfileInfoProvider,
+  useAccountContext,
 };

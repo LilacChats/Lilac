@@ -42,5 +42,13 @@
   "SEND_CHAT": {
     "name": "Send",
     "keyCombination": ["/", "s", "m"]
+  },
+  "EDIT_PICTURE": {
+    "name": "Edit",
+    "keyCombination": ["/", "e"]
+  },
+  "SAVE_PICTURE": {
+    "name": "Save",
+    "keyCombination": ["/", "s", "p"]
   }
 }

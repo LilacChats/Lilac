@@ -1,69 +1,48 @@
-.InputContainer {
-  width: fit-content;
-  height: 30px;
-  display: block;
-  padding: 0px 10px 0px 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-
-.InputText,
-.InputTextErrorState {
-  width: 200px;
-  height: 60%;
-  color: #9f9f9f;
-  font-family: monospace;
-  text-align: center;
-  font-size: 15px;
-  background: #272727;
+.InputBox,
+.InputBoxErrorState {
+  background-color: #202020;
   padding: 10px;
-  border-radius: 6px;
-  border: 1px dashed transparent;
-  transition: 0.4s all;
+  min-width: 200px;
+  min-height: 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  color: #989898;
+  border: 3px solid transparent;
+  transition: 0.2s all;
 }
 
-.InputText {
-  border-bottom: 2px solid #9f9f9f;
-}
-
-.InputTextErrorState {
-  animation: shake 0.2s;
-  border-bottom: 2px solid #ff007f;
+.InputBoxErrorState {
+  border-color: #ff0076;
+  animation: 0.4s shake;
 }
 
 @keyframes shake {
   0% {
-    transform: translate(-10px, 0%);
+    margin-left: 10px;
   }
   25% {
-    transform: translate(10px, 0%);
+    margin-left: -10px;
   }
   50% {
-    transform: translate(-10px, 0%);
+    margin-left: 10px;
   }
-  99% {
-    transform: translate(10px, 0%);
+  75% {
+    margin-left: -10px;
   }
   100% {
-    transform: translate(0px, 0%);
+    margin-left: 0px;
   }
 }
 
-.InputText:placeholder {
-  color: #9f9f9f;
+.InputBoxErrorState::placeholder,
+.InputBox::placeholder {
+  color: #5c5c5c;
 }
 
-.InputText:focus {
-  /* width: 210px; */
-  /* height: 101%; */
-  color: mediumpurple;
-  border-bottom: 2px solid mediumpurple;
-}
-
-.SubTitle {
-  color: #9f9f9f;
-  font-size: 20px;
+.InputBoxErrorState:focus,
+.InputBox:focus {
+  background-color: #202020;
+  color: #989898;
+  border-radius: 10px;
+  border-color: rgb(74, 137, 253);
 }

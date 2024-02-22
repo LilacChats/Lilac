@@ -1,0 +1,137 @@
+.SignupMainContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+
+.PageControlsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  height: unset;
+  position: absolute;
+  top: 3%;
+  /* right: 50%; */
+  transform: translateX(50%);
+}
+
+.Page {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  height: unset;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --indicator-inactive: 15px;
+  --indicator-active: 17px;
+}
+
+.PageIndicatorInactive,
+.PageIndicatorActive {
+  width: 15px;
+  height: 15px;
+  transition: 0.4s all;
+  border-radius: 50%;
+}
+
+.PageIndicatorInactive {
+  background: #202020;
+}
+
+.PageIndicatorActive {
+  background: rgb(74, 137, 253);
+}
+
+.PageIndicatorContainer {
+  bottom: 2%;
+  position: absolute;
+  width: 100%;
+  height: unset;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.MarkDownContainer {
+  border-radius: 10px;
+  background-color: #202020;
+  color: #989898;
+  padding: 10px;
+  width: 80%;
+  height: 60%;
+  overflow-y: scroll;
+}
+
+.PictureContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  border: 4px solid rgb(74, 137, 253);
+  cursor: pointer;
+  /* transition: 0.4s all; */
+}
+
+.PictureContainer:focus {
+  height: 100px;
+  width: 100px;
+}
+
+#AddPicture {
+  color: #989898;
+  font-size: 60px;
+  margin-top: 50px;
+}
+
+.PictureEditContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 4;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, 50%);
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+}
+
+.PictureEditWindow {
+  width: 70%;
+  height: unset;
+  max-height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ProfileImage,
+.PictureImageHover {
+  position: absolute;
+  /* transform: translate(50%, 50%); */
+  /* right: 50%; */
+  /* bottom: 50%; */
+  border-radius: 50%;
+  transition: 0.4s all;
+  z-index: -1;
+}

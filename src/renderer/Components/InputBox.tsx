@@ -1,105 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import {
-  validateEmail,
-  validateName,
-  validateServerURL,
-} from '../../validator';
-import {
-  useProfileCreationBreakerContext,
-  useProfileInfoContext,
-} from '../Contexts';
-import { InputBoxProps } from '../../TypeModels/InputBox';
+import { useEffect, useState } from 'react';
 import '../Styles/InputBox.css';
+import { InputBoxProps } from '../../types';
+import { useAccountContext } from '../Contexts';
 
-const InputBox: React.FC<InputBoxProps> = ({
-  style,
-  type,
-  placeholder,
-  errorState,
-}) => {
-  const { setBreakState } = useProfileCreationBreakerContext();
-  const {
-    name,
-    email,
-    password,
-    setName,
-    setEmail,
-    setPassword,
-    serverURL,
-    setServerURL,
-  } = useProfileInfoContext();
-  const [message, setMessage] = useState<string>('');
-  const [inputClass, setInputClass] = useState<string>('InputText');
+const InputBox: React.FC<InputBoxProps> = (props) => {
+  const { name, email, password, serverURL } = useAccountContext();
+  const [value, setValue] = useState<string>('');
+  const [errorState, setErrorState] = useState<boolean>(false);
+
   useEffect(() => {
-    if (type === 'name' || type === 'email' || type === 'password') {
-      if (validateEmail(email) && validateName(name) && password != '') {
-        setBreakState(false);
-      } else {
-        setBreakState(true);
-      }
-    } else if (type === 'server') {
-      if (validateServerURL(serverURL)) {
-        setBreakState(false);
-      } else {
-        setBreakState(true);
+    if (props.triggerValidationFailAnimation != '') {
+      let validationObject: string[] =
+        props.triggerValidationFailAnimation.split('_');
+      if (validationObject[2] == 'true') setErrorState(true);
+      else setErrorState(false);
+      switch (validationObject[1]) {
+        case 'name':
+          setValue(name);
+          break;
+        case 'email':
+          setValue(email);
+          break;
+        case 'password':
+          setValue(password);
+          break;
+        case 'server':
+          setValue(serverURL);
+          break;
+        default:
+          break;
       }
     }
-  }, [type, name, email, password, serverURL]);
-  useEffect(() => {
-    if (errorState) setInputClass('InputTextErrorState');
-  }, [errorState]);
+  }, [props.triggerValidationFailAnimation]);
+
   return (
-    <div
-      className="InputContainer"
-      style={{ width: type == 'chat' ? '100%' : 'fit-content' }}
-    >
-      <input
-        type={
-          type === 'email' ||
-          type === 'name' ||
-          type === 'server' ||
-          type == 'chat'
-            ? 'text'
-            : 'password'
-        }
-        style={style}
-        className={inputClass}
-        placeholder={placeholder}
-        value={
-          type === 'email'
-            ? email
-            : type === 'name'
-            ? name
-            : type === 'password'
-            ? password
-            : type === 'server'
-            ? serverURL
-            : message
-        }
-        onChange={(e) => {
-          if (e.target.value != '') setInputClass('InputText');
-          switch (type) {
-            case 'email':
-              setEmail(e.target.value);
-              break;
-            case 'name':
-              setName(e.target.value);
-              break;
-            case 'password':
-              setPassword(e.target.value);
-              break;
-            case 'server':
-              setServerURL(e.target.value);
-              break;
-            case 'chat':
-              setMessage(e.target.value);
-              break;
-            default:
-              break;
-          }
-        }}
-      />
-    </div>
+    <input
+      key={props.triggerValidationFailAnimation}
+      className={`InputBox${errorState ? 'ErrorState' : ''}`}
+      style={props.style ? props.style : {}}
+      type={props.type}
+      value={value}
+      placeholder={props.placeholder}
+      onChange={(e) => {
+        setErrorState(false);
+        setValue(e.target.value);
+        if (props.triggerValueChange) props.triggerValueChange(e.target.value);
+      }}
+    />
   );
 };
 

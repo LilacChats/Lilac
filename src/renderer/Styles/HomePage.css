@@ -1,37 +1,24 @@
-.HomePage {
+.HomePageContainer {
+  position: absolute;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
-  align-items: center;
   width: 100%;
   height: 100%;
-  background: #2f2f2f;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .Title {
-  font-family: system-ui;
-  color: #5d5d5d;
-  font-size: 40px;
-  font-weight: 100;
+  font-size: 50px;
+  font-weight: lighter;
+  color: #989898;
 }
 
 .SubContainer {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 10px;
-  width: fit-content;
-  justify-content: center;
-  align-items: center;
-}
-
-.MainContainer {
-  display: flex;
-  width: 100%;
-  height: fit-content;
   flex-direction: row;
-  gap: 10px;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 }

@@ -1,37 +1,45 @@
 .ButtonContainer {
-  width: 150px;
-  height: 35px;
-  background: #272727;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 5px 15px 5px 15px;
-  gap: 10px;
-  cursor: pointer;
-  transition: 0.2s all;
-}
-
-.ButtonLabel {
-  color: #9f9f9f;
-  font-size: 14px;
-}
-
-.KeyBinding {
-  border: 1px solid #9f9f9f;
-  color: #9f9f9f;
-  border-radius: 10px;
-  width: fit-content;
-  height: fit-content;
-  padding: 5px;
-  transition: 0.2s all;
-}
-
-.KeyBindingContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  min-width: 100px;
+  /* background-color: #202020; */
+  /* color: #989898; */
+  border-radius: 50px;
+  border: 4px solid rgb(66, 66, 66);
   gap: 10px;
+  padding: 10px 20px 10px 20px;
+  cursor: pointer;
+  transition: 0.4s all;
+  background-color: rgb(56, 104, 192);
+  border: 4px solid rgb(74, 137, 253);
+  color: #2f2f2f;
+}
+
+.KeyBindsContainer,
+.KeyBindsContainerHover {
+  padding: 1px 5px 1px 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  color: rgb(74, 137, 253);
+  background-color: #2f2f2f;
+  transition: 0.4s all;
+  border: 1px solid #2f2f2f;
+}
+
+.KeyBindsContainerHover {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.37);
+}
+
+.ButtonContainer:hover {
+  box-shadow: inset 0px 0px 10px 1px rgba(0, 0, 0, 0.212);
+}
+
+.ButtonContainer:active {
+  /* box-shadow: inset 0px 0px 10px 2px rgba(0, 0, 0, 0.253); */
+  background-color: rgb(46, 79, 139);
 }
