@@ -21,6 +21,42 @@
   transform: translateX(50%);
 }
 
+.back-button {
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 30px;
+  background-color: rgb(29, 29, 29);
+  border-radius: 20px;
+  color: #989898;
+  font-size: 14px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.triangle {
+  content: '';
+  left: 15px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #989898;
+  transition: all 0.3s;
+}
+.back-button:hover {
+  border-radius: 10px;
+  /* box-shadow: inset 0px 0px 10px 1px rgba(0, 0, 0, 0.212); */
+}
+
+.back-button:active {
+  background-color: black;
+}
+
 .Page {
   position: absolute;
   display: flex;

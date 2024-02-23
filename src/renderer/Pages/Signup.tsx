@@ -60,19 +60,19 @@ const SignupPage: React.FC<SignupPageProps> = (props) => {
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const handleKeyPress = (e: any) => {
-    console.log(e.key);
-    if (e.key == 'Escape') {
-      handleBackwardMotion();
-    }
-  };
+  // const handleKeyPress = (e: any) => {
+  //   console.log(e.key);
+  //   if (e.key == 'Escape') {
+  //     handleBackwardMotion();
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener('keydown', handleKeyPress);
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyPress);
+  //   };
+  // }, []);
 
   useEffect(() => {
     refreshComponent(setNameValidationString, 'name', false);
@@ -280,22 +280,15 @@ const SignupPage: React.FC<SignupPageProps> = (props) => {
             color: '#989898',
           }}
         >
-          <div>Press</div>
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              border: '1px solid #989898',
-              borderRadius: '10px',
-              padding: '2px 10px 5px 10px',
-              letterSpacing: '1.5px',
+            onClick={() => {
+              handleBackwardMotion();
             }}
+            className="back-button"
           >
-            {'esc'}
+            <div className="triangle"></div>
+            <div>Back</div>
           </div>
-          <div>to go back</div>
         </div>
       </motion.div>
       <AnimatePresence>
