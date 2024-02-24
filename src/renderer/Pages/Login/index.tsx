@@ -3,12 +3,14 @@ import Button from '../../Components/Button';
 import InputBox from '../../Components/InputBox';
 import { useAccountContext, useKeyBindsContext } from '../../Contexts';
 import { CHANNELS, INPUT_PLACEHOLDERS } from '../../../objs';
-import { InputBoxTypes, LoginPageProps } from '../../../types';
+import { AppPages, InputBoxTypes } from '../../../types';
 import { useEffect, useState } from 'react';
 import { validateEmail, validateServerURL } from '../../../validator';
 import { motion } from 'framer-motion';
 
-const LoginPage: React.FC<LoginPageProps> = (props) => {
+const LoginPage: React.FC<{
+  triggerPageChange: (page: AppPages) => void;
+}> = (props) => {
   const { keyBinds, setKeyBinds } = useKeyBindsContext();
   const { email, password, serverURL, setEmail, setPassword, setServerURL } =
     useAccountContext();
@@ -67,6 +69,7 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
       passwordValidationStatus
     ) {
       //Direct to Chat Homepage
+      props.triggerPageChange('Chat');
     }
   };
 

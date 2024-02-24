@@ -56,7 +56,7 @@ type ChannelType = {
   SelectProfilePicture: 'SelectProfilePicture';
 };
 
-type AppPages = 'Login' | 'Signup';
+type AppPages = 'Login' | 'Signup' | 'Chat';
 
 type InputBoxTypes = 'name' | 'email' | 'password' | 'server';
 
@@ -83,20 +83,13 @@ type InputBoxProps = {
 };
 
 //Page Props
-type SignupPageProps = {
-  triggerPageChange: (page: AppPages) => void;
-};
-
-type LoginPageProps = {
-  triggerPageChange: (page: AppPages) => void;
-};
-
 type PageContainerProps = {
   page: number;
   direction: string;
   initialState?: number;
   componentLoaded?: Function;
   children: ComponentProps<any>;
+  style?: React.CSSProperties;
 };
 
 type PictureEditPageProps = {
@@ -128,8 +121,6 @@ export {
   InputBoxProps,
   Placeholders,
   RegexObect,
-  LoginPageProps,
-  SignupPageProps,
   AccountContext,
   InputBoxTypes,
   FileDialogObject,

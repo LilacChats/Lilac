@@ -3,7 +3,6 @@ import '../../Styles/Signup.css';
 import { useAccountContext, useKeyBindsContext } from '../../Contexts';
 import { CHANNELS } from '../../../objs';
 import Button from '../../Components/Button';
-import { SignupPageProps } from '../../../types';
 import { Crop, PercentCrop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {
@@ -21,10 +20,13 @@ import Page2 from './Page_2';
 import SignupPageIndicator from '../../Components/SignupPageIndicator';
 import Page4 from './Page_4';
 import PictureEditPage from './PictureEditPage';
+import { AppPages } from '../../../types';
 
 const md = '# Hi, *Pluto*!';
 
-const SignupPage: React.FC<SignupPageProps> = (props) => {
+const SignupPage: React.FC<{
+  triggerPageChange: (page: AppPages) => void;
+}> = (props) => {
   const { keyBinds } = useKeyBindsContext();
   const {
     name,
@@ -220,19 +222,30 @@ const SignupPage: React.FC<SignupPageProps> = (props) => {
       </AnimatePresence>
       <AnimatePresence>
         {page == 4 ? (
-          <PageContainer page={4} direction={direction}>
-            <Page4 data={md} />
+          <PageContainer
+            style={{ width: '90%', height: '70%' }}
+            page={4}
+            direction={direction}
+          >
+            <Page4
+              data={md}
+              onAccepted={() => {
+                props.triggerPageChange('Chat');
+              }}
+            />
           </PageContainer>
         ) : null}
       </AnimatePresence>
-      <Button
-        style={{
-          marginTop: '50vh',
-        }}
-        name={keyBinds.FORWARD.name}
-        keyCombination={keyBinds.FORWARD.keyCombination}
-        onClick={handleForwardMotion}
-      />
+      {page != 4 ? (
+        <Button
+          style={{
+            marginTop: '50vh',
+          }}
+          name={keyBinds.FORWARD.name}
+          keyCombination={keyBinds.FORWARD.keyCombination}
+          onClick={handleForwardMotion}
+        />
+      ) : null}
       <SignupPageIndicator page={page} />
     </div>
   );

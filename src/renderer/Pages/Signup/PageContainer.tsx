@@ -30,6 +30,7 @@ const PageContainer: React.FC<PageContainerProps> = (props) => {
         </motion.div>
       ) : (
         <motion.div
+          style={props.style}
           initial={
             props.direction == 'left'
               ? SIGNUP_ANIMATION_OBJS.initialLeft
