@@ -1,4 +1,6 @@
 import { TargetAndTransition, VariantLabels } from 'framer-motion';
+import { ComponentProps } from 'react';
+import { Crop, PercentCrop, PixelCrop } from 'react-image-crop';
 
 type KeyBindingObject = {
   name: string;
@@ -81,16 +83,31 @@ type InputBoxProps = {
 };
 
 //Page Props
-type HomePageProps = {
-  triggerPageChange: (page: AppPages) => void;
-};
-
 type SignupPageProps = {
   triggerPageChange: (page: AppPages) => void;
 };
 
 type LoginPageProps = {
   triggerPageChange: (page: AppPages) => void;
+};
+
+type PageContainerProps = {
+  page: number;
+  direction: string;
+  initialState?: number;
+  componentLoaded?: Function;
+  children: ComponentProps<any>;
+};
+
+type PictureEditPageProps = {
+  onCropChanged: (percentCrop: PercentCrop) => void;
+  previewCanvasRef: React.Ref<HTMLCanvasElement>;
+  cropCompleted: PixelCrop | undefined;
+  onCropCompleted: (c: PixelCrop) => void;
+  onPictureLoaded: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  crop: Crop | undefined;
+  onSubmit: Function;
+  imgRef: React.Ref<HTMLImageElement>;
 };
 
 type SignupAnimationObject = {
@@ -107,7 +124,6 @@ export {
   ButtonProps,
   KeyBindsContext,
   ChannelType,
-  HomePageProps,
   AppPages,
   InputBoxProps,
   Placeholders,
@@ -118,4 +134,6 @@ export {
   InputBoxTypes,
   FileDialogObject,
   SignupAnimationObject,
+  PictureEditPageProps,
+  PageContainerProps,
 };

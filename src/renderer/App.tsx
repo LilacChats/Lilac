@@ -1,10 +1,9 @@
-import Home from './Pages/Home';
 import { AccountProvider, KeyBindsProvider } from './Contexts';
 import './Styles/App.css';
 import { useState } from 'react';
-import LoginPage from './Pages/Login';
+import LoginPage from './Pages/Login/index';
 import { AppPages } from '../types';
-import SignupPage from './Pages/Signup';
+import SignupPage from './Pages/Signup/index';
 
 const App = () => {
   const [pageState, setPageState] = useState<AppPages>('Login');

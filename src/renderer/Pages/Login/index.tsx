@@ -1,11 +1,11 @@
-import '../Styles/Login.css';
-import Button from '../Components/Button';
-import InputBox from '../Components/InputBox';
-import { useAccountContext, useKeyBindsContext } from '../Contexts';
-import { CHANNELS, INPUT_PLACEHOLDERS } from '../../objs';
-import { InputBoxTypes, LoginPageProps } from '../../types';
+import '../../Styles/Login.css';
+import Button from '../../Components/Button';
+import InputBox from '../../Components/InputBox';
+import { useAccountContext, useKeyBindsContext } from '../../Contexts';
+import { CHANNELS, INPUT_PLACEHOLDERS } from '../../../objs';
+import { InputBoxTypes, LoginPageProps } from '../../../types';
 import { useEffect, useState } from 'react';
-import { validateEmail, validateServerURL } from '../../validator';
+import { validateEmail, validateServerURL } from '../../../validator';
 import { motion } from 'framer-motion';
 
 const LoginPage: React.FC<LoginPageProps> = (props) => {
