@@ -20,8 +20,8 @@ const PageContainer: React.FC<PageContainerProps> = (props) => {
             props?.initialState == 0
               ? { scale: 0, opacity: 0 }
               : props.direction == 'left'
-              ? SIGNUP_ANIMATION_OBJS.initialLeft
-              : SIGNUP_ANIMATION_OBJS.initialRight
+                ? SIGNUP_ANIMATION_OBJS.initialLeft
+                : SIGNUP_ANIMATION_OBJS.initialRight
           }
           animate={SIGNUP_ANIMATION_OBJS.animate}
           className="Page"

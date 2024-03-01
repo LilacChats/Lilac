@@ -1,17 +1,35 @@
-.InputBox,
-.InputBoxErrorState {
-  background-color: #202020;
+.InputBoxDark,
+.InputBoxLight,
+.InputBoxErrorStateDark,
+.InputBoxErrorStateLight {
   padding: 10px;
   min-width: 200px;
   min-height: 20px;
   font-size: 15px;
   border-radius: 10px;
-  color: #989898;
   border: 3px solid transparent;
   transition: 0.2s all;
 }
 
-.InputBoxErrorState {
+.InputBoxErrorStateDark,
+.InputBoxDark {
+  color: rgb(207, 207, 207);
+  background-color: #202020;
+}
+
+.InputBoxLight {
+  color: #2f2f2f;
+  background-color: #bdbdbd;
+}
+
+.InputBoxErrorStateLight {
+  color: #2f2f2f;
+  background-color: #ff00762e;
+  animation: 0.4s shake;
+  border-color: transparent;
+}
+
+.InputBoxErrorStateDark {
   border-color: #ff0076;
   animation: 0.4s shake;
 }
@@ -34,15 +52,32 @@
   }
 }
 
-.InputBoxErrorState::placeholder,
-.InputBox::placeholder {
+.InputBoxErrorStateDark::placeholder,
+.InputBoxLight::placeholder,
+.InputBoxDark::placeholder {
   color: #5c5c5c;
 }
 
-.InputBoxErrorState:focus,
-.InputBox:focus {
+.InputBoxErrorStateLight::placeholder {
+  color: #2f2f2f;
+}
+
+.InputBoxErrorStateDark:focus,
+.InputBoxErrorStateLight:focus,
+.InputBoxDark:focus,
+.InputBoxLight:focus {
+  border-radius: 10px;
+}
+
+.InputBoxErrorStateDark:focus,
+.InputBoxDark:focus {
+  border-color: rgb(74, 137, 253);
   background-color: #202020;
   color: #989898;
-  border-radius: 10px;
-  border-color: rgb(74, 137, 253);
+}
+
+.InputBoxErrorStateLight:focus,
+.InputBoxLight:focus {
+  background-color: #98989894;
+  color: #2f2f2f;
 }

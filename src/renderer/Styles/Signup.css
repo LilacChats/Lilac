@@ -1,4 +1,5 @@
-.SignupMainContainer {
+.SignupMainContainerDark,
+.SignupMainContainerLight {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -6,6 +7,17 @@
   justify-content: center;
   align-items: center;
   position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -2;
+}
+
+.SignupMainContainerDark {
+  background: #2f2f2f;
+}
+
+.SignupMainContainerLight {
+  background: rgb(207, 207, 207);
 }
 
 .PageControlsContainer {
@@ -21,16 +33,15 @@
   transform: translateX(50%);
 }
 
-.back-button {
+.back-buttonDark,
+.back-buttonLight {
   gap: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 10px 30px;
-  background-color: rgb(29, 29, 29);
   border-radius: 20px;
-  color: #989898;
   font-size: 14px;
   text-decoration: none;
   position: relative;
@@ -38,23 +49,58 @@
   transition: all 0.3s;
   cursor: pointer;
 }
-.triangle {
+
+.back-buttonDark {
+  background-color: rgb(29, 29, 29);
+  color: #989898;
+}
+
+.back-buttonLight {
+  background-color: #bdbdbd;
+  color: #2f2f2f;
+}
+
+.triangle-leftDark,
+.triangle-rightDark,
+.triangle-leftLight,
+.triangle-rightLight {
   content: '';
   left: 15px;
   width: 0;
   height: 0;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-right: 8px solid #989898;
   transition: all 0.3s;
 }
-.back-button:hover {
+
+.triangle-leftDark {
+  border-right: 8px solid #989898;
+}
+
+.triangle-leftLight {
+  border-right: 8px solid #2f2f2f;
+}
+
+.triangle-rightLight {
+  border-left: 8px solid #2f2f2f;
+}
+
+.triangle-rightDark {
+  border-left: 8px solid #989898;
+}
+
+.back-buttonLight:hover,
+.back-buttonDark:hover {
   border-radius: 10px;
   /* box-shadow: inset 0px 0px 10px 1px rgba(0, 0, 0, 0.212); */
 }
 
-.back-button:active {
+.back-buttonDark:active {
   background-color: black;
+}
+
+.back-buttonLight:active {
+  background-color: #989898;
 }
 
 .Page {
@@ -72,7 +118,8 @@
   --indicator-active: 17px;
 }
 
-.PageIndicatorInactive,
+.PageIndicatorInactiveDark,
+.PageIndicatorInactiveLight,
 .PageIndicatorActive {
   width: 15px;
   height: 15px;
@@ -80,8 +127,12 @@
   border-radius: 50%;
 }
 
-.PageIndicatorInactive {
+.PageIndicatorInactiveDark {
   background: #202020;
+}
+
+.PageIndicatorInactiveLight {
+  background: #bdbdbd;
 }
 
 .PageIndicatorActive {

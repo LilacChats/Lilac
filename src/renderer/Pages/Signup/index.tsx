@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import '../../Styles/Signup.css';
-import { useAccountContext, useKeyBindsContext } from '../../Contexts';
+import {
+  useAccountContext,
+  useKeyBindsContext,
+  useUIStateContext,
+} from '../../Contexts';
 import { CHANNELS } from '../../../objs';
 import Button from '../../Components/Button';
 import { Crop, PercentCrop, PixelCrop } from 'react-image-crop';
@@ -11,7 +15,7 @@ import {
   validateServerURL,
 } from '../../../validator';
 import { AnimatePresence } from 'framer-motion';
-import BackButton from '../../Components/BackButton';
+import MutedButton from '../../Components/MutedButton';
 import ProfilePictureEditable from '../../Components/ProfilePictureEditable';
 import { canvasPreview, centerAspectCrop, refreshComponent } from './functions';
 import PageContainer from './PageContainer';
@@ -27,6 +31,7 @@ const md = '# Hi, *Pluto*!';
 const SignupPage: React.FC<{
   triggerPageChange: (page: AppPages) => void;
 }> = (props) => {
+  const { mode } = useUIStateContext();
   const { keyBinds } = useKeyBindsContext();
   const {
     name,
@@ -147,8 +152,10 @@ const SignupPage: React.FC<{
   }
 
   return (
-    <div className="SignupMainContainer">
-      <BackButton
+    <div className={`SignupMainContainer${mode == 'dark' ? 'Dark' : 'Light'}`}>
+      <MutedButton
+        label="Back"
+        direction="left"
         clicked={() => {
           handleBackwardMotion();
         }}

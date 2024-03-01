@@ -46,6 +46,13 @@ type AccountContext = {
   setServerURL: (serverURL: string) => void;
 };
 
+type UIStateContext = {
+  mode: 'dark' | 'light';
+  setMode: (mode: 'dark' | 'light') => void;
+  pageID: number;
+  setPageID: (pageID: number) => void;
+};
+
 type FileDialogObject = {
   filePaths: string[];
   canceled: boolean;
@@ -54,6 +61,9 @@ type FileDialogObject = {
 type ChannelType = {
   LoadKeyBinds: 'LoadKeyBinds';
   SelectProfilePicture: 'SelectProfilePicture';
+  VerifyLogin: 'VerifyLogin';
+  FetchServerData: 'FetchServerData';
+  SaveUIState: 'SaveUIState';
 };
 
 type AppPages = 'Login' | 'Signup' | 'Chat';
@@ -127,4 +137,5 @@ export {
   SignupAnimationObject,
   PictureEditPageProps,
   PageContainerProps,
+  UIStateContext,
 };

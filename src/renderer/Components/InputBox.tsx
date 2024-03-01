@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import '../Styles/InputBox.css';
 import { InputBoxProps } from '../../types';
-import { useAccountContext } from '../Contexts';
+import { useAccountContext, useUIStateContext } from '../Contexts';
 
 const InputBox: React.FC<InputBoxProps> = (props) => {
   const { name, email, password, serverURL } = useAccountContext();
+  const { mode } = useUIStateContext();
   const [value, setValue] = useState<string>('');
   const [errorState, setErrorState] = useState<boolean>(false);
 
@@ -36,7 +37,7 @@ const InputBox: React.FC<InputBoxProps> = (props) => {
   return (
     <input
       key={props.triggerValidationFailAnimation}
-      className={`InputBox${errorState ? 'ErrorState' : ''}`}
+      className={`InputBox${errorState ? 'ErrorState' : ''}${mode == 'dark' ? 'Dark' : 'Light'}`}
       style={props.style ? props.style : {}}
       type={props.type}
       value={value}

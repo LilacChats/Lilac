@@ -1,16 +1,22 @@
 import '../../Styles/Login.css';
 import Button from '../../Components/Button';
 import InputBox from '../../Components/InputBox';
-import { useAccountContext, useKeyBindsContext } from '../../Contexts';
+import {
+  useAccountContext,
+  useKeyBindsContext,
+  useUIStateContext,
+} from '../../Contexts';
 import { CHANNELS, INPUT_PLACEHOLDERS } from '../../../objs';
 import { AppPages, InputBoxTypes } from '../../../types';
 import { useEffect, useState } from 'react';
 import { validateEmail, validateServerURL } from '../../../validator';
 import { motion } from 'framer-motion';
+import MutedButton from '../../Components/MutedButton';
 
 const LoginPage: React.FC<{
   triggerPageChange: (page: AppPages) => void;
 }> = (props) => {
+  const { mode } = useUIStateContext();
   const { keyBinds, setKeyBinds } = useKeyBindsContext();
   const { email, password, serverURL, setEmail, setPassword, setServerURL } =
     useAccountContext();
@@ -38,6 +44,18 @@ const LoginPage: React.FC<{
         errorState,
     );
   }
+
+  window.electron.ipcRenderer.once(CHANNELS.VerifyLogin, (arg: any) => {
+    if (arg.valid) {
+      window.electron.ipcRenderer.sendMessage(CHANNELS.FetchServerData, {
+        email: email,
+        serverURL: serverURL,
+        password: password,
+      });
+      props.triggerPageChange('Chat');
+    } else {
+    }
+  });
 
   useEffect(() => {
     window.electron.ipcRenderer.sendMessage(CHANNELS.LoadKeyBinds, {});
@@ -68,8 +86,12 @@ const LoginPage: React.FC<{
       emailValidationStatus &&
       passwordValidationStatus
     ) {
-      //Direct to Chat Homepage
-      props.triggerPageChange('Chat');
+      //Verify Login
+      window.electron.ipcRenderer.sendMessage(CHANNELS.VerifyLogin, {
+        email: email,
+        password: password,
+        serverURL: serverURL,
+      });
     }
   };
 
@@ -80,7 +102,7 @@ const LoginPage: React.FC<{
       transition={{
         duration: 0.4,
       }}
-      className="LoginContainer"
+      className={`LoginContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
     >
       {/* <div className="Title">Login</div> */}
       <div
@@ -124,24 +146,25 @@ const LoginPage: React.FC<{
         name={keyBinds.LOGIN.name}
         onClick={handleLogin}
       />
-      <div className="BottomSignupContainer">
-        Don't have an account?<br></br>
-        <div
-          onClick={() => {
+      <div
+        className={`BottomSignupContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
+      >
+        <MutedButton
+          label="Create Your Account"
+          direction="right"
+          style={{
+            width: '155px',
+            position: 'absolute',
+            alignItems: 'flex-end',
+          }}
+          clicked={() => {
             setEmail('');
             setPassword('');
             setServerURL('');
             props.triggerPageChange('Signup');
           }}
           className="CreateAccountLink"
-        >
-          {'Create Your Account'}
-          <div className="ArrowContainer">
-            <div id="Arrow1">{'>'}</div>
-            <div id="Arrow2">{'>'}</div>
-            <div id="Arrow3">{'>'}</div>
-          </div>
-        </div>
+        />
       </div>
     </motion.div>
   );

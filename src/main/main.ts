@@ -61,6 +61,22 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
     });
 });
 
+ipcMain.on(CHANNELS.SaveUIState, (event, arg) => {
+  filePath = process.cwd() + '\\src\\UserFiles\\UIState.json';
+});
+
+ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
+  // setTimeout(() => {
+  event.reply(CHANNELS.VerifyLogin, { valid: true });
+  // }, 5000);
+});
+
+ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
+  setTimeout(() => {
+    event.reply(CHANNELS.FetchServerData, {});
+  }, 5000);
+});
+
 // function fileExistsSync(filePath: string): boolean {
 //   try {
 //     fs.accessSync(filePath, fs.constants.F_OK);
@@ -176,6 +192,12 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: 'rgb(207,207,207)',
+      symbolColor: '#989898',
+      height: 30,
+    },
     autoHideMenuBar: true,
     icon: getAssetPath('icon.png'),
     webPreferences: {

@@ -6,6 +6,7 @@ import {
   Placeholders,
   RegexObect,
   SignupAnimationObject,
+  UIStateContext,
 } from './types';
 
 const EMPTY_KEYBIND_OBJ: KeyBindingObject = { name: '', keyCombination: [] };
@@ -56,6 +57,16 @@ const INPUT_PLACEHOLDERS: Placeholders = {
 const CHANNELS: ChannelType = {
   LoadKeyBinds: 'LoadKeyBinds',
   SelectProfilePicture: 'SelectProfilePicture',
+  VerifyLogin: 'VerifyLogin',
+  FetchServerData: 'FetchServerData',
+  SaveUIState: 'SaveUIState',
+};
+
+const INITIAL_UI_STATE_CONTEXT: UIStateContext = {
+  pageID: 0,
+  mode: 'dark',
+  setMode: () => {},
+  setPageID: () => {},
 };
 
 const REGEX_STRINGS: RegexObect = {
@@ -97,4 +108,5 @@ export {
   INITIAL_ACCOUNT_CONTEXT,
   TO_RADIANS,
   SIGNUP_ANIMATION_OBJS,
+  INITIAL_UI_STATE_CONTEXT,
 };

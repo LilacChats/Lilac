@@ -1,0 +1,249 @@
+.MainChatContainerLight,
+.MainChatContainerDark {
+  display: flex;
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+}
+
+.MainChatContainerLight {
+  background-color: #252525;
+}
+
+.MainChatContainerDark {
+  background-color: rgb(207, 207, 207);
+}
+
+.ServerContainerDark,
+.ServerContainerLight {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  position: absolute;
+  transition: 0.4s all;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: -16px 0px 30px 1px #1c1c1c;
+}
+
+.ServerContainerDark {
+  background-color: #2f2f2f;
+}
+
+.ServerContainerLight {
+  background-color: rgb(207, 207, 207);
+}
+
+.Hamburger {
+  display: flex;
+  position: relative;
+  width: 20px;
+  height: 15px;
+  background-color: transparent;
+  /* gap: 1px; */
+  flex-direction: column;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.HamburgerLine {
+  position: relative;
+  background-color: rgb(134, 134, 134);
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.ChatHistoryBlockDark,
+.ChatHistoryBlockLight {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 20vw;
+  height: 100%;
+  border-radius: 10px;
+  padding: 5px;
+  overflow: auto;
+}
+
+.ChatHistoryBlockDark {
+  background: #252525;
+}
+
+.ChatHistoryBlockLight {
+  background: #bdbdbd;
+}
+
+.HistoryItemDark,
+.HistoryItemLight {
+  width: 100%;
+  min-height: 70px;
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.HistoryItemDark {
+  background: #2f2f2f;
+}
+
+.HistoryItemLight {
+  background: rgb(207, 207, 207);
+}
+
+.ProfilePictureDark,
+.ProfilePictureLight {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  color: pink;
+  font-size: 20px;
+  font-weight: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+.ProfilePictureDark {
+  background-color: #202020;
+}
+
+.ProfilePictureLight {
+  background-color: #bdbdbd;
+}
+
+.HistoryBlockInfo {
+  height: 100%;
+  width: 70%;
+  /* background-color: aliceblue; */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.LastMessageDark,
+.LastMessageLight,
+.NameDark,
+.NameLight {
+  width: 50%;
+  height: 15px;
+  border-radius: 10px;
+  transition: 0.4 all;
+}
+
+.LastMessageDark,
+.LastMessageLight {
+  width: 70%;
+}
+
+.LastMessageDark,
+.NameDark {
+  background-color: #1c1c1c;
+}
+
+.LastMessageLight,
+.NameLight {
+  background-color: #bdbdbd;
+}
+
+@keyframes shine {
+  0% {
+    background-color: #1c1c1c;
+  }
+  50% {
+    background-color: #292929;
+  }
+  100% {
+    background-color: #1c1c1c;
+  }
+}
+
+.LoadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  min-height: 30px;
+  width: 100%;
+  transition: 0.4s;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.LoadingCircle {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 5px dotted #444444;
+  animation: rotate 2s infinite;
+}
+
+.ChatListTypeSwitcherContainerDark,
+.ChatListTypeSwitcherContainerLight {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  height: 50px;
+  width: 230px;
+  border-radius: 50px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.ChatListTypeSwitcherContainerDark {
+  background: #202020;
+}
+
+.ChatListTypeSwitcherContainerLight {
+  background: #bdbdbd;
+}
+
+.ChatListTypeSelectorDark,
+.ChatListTypeSelectorLight {
+  height: 40px;
+  width: 110px;
+  border-radius: 50px;
+  position: absolute;
+  transition: 0.4s all;
+}
+
+.ChatListTypeSelectorDark {
+  background: #2f2f2f;
+}
+
+.ChatListTypeSelectorLight {
+  background: rgb(207, 207, 207);
+}
+
+.LeftSubContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
