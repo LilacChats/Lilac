@@ -21,7 +21,11 @@ const ChatHome = () => {
     >
       <motion.div
         animate={{
-          left: serverListState ? 80 : 0,
+          transform: `translateX(${serverListState ? '80px' : '0%'})`,
+          // left: serverListState ? 80 : 0,
+        }}
+        transition={{
+          duration: 0.4,
         }}
         className={`ServerContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
       >
@@ -69,7 +73,9 @@ const ChatHome = () => {
               DM &nbsp;
             </div>
             <motion.div
-              style={{ marginLeft: chatTypeState == 0 ? '-10%' : '10%' }}
+              style={{
+                transform: `translateX(${chatTypeState == 0 ? '-52%' : '52%'}`,
+              }}
               className={`ChatListTypeSelector${mode == 'dark' ? 'Dark' : 'Light'}`}
             ></motion.div>
           </motion.div>
