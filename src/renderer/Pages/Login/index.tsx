@@ -10,8 +10,9 @@ import { CHANNELS, INPUT_PLACEHOLDERS } from '../../../objs';
 import { AppPages, InputBoxTypes } from '../../../types';
 import { useEffect, useState } from 'react';
 import { validateEmail, validateServerURL } from '../../../validator';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import MutedButton from '../../Components/MutedButton';
+import ErrorDialog from '../../Components/ErrorDialog';
 
 const LoginPage: React.FC<{
   triggerPageChange: (page: AppPages) => void;
@@ -20,6 +21,8 @@ const LoginPage: React.FC<{
   const { keyBinds, setKeyBinds } = useKeyBindsContext();
   const { email, password, serverURL, setEmail, setPassword, setServerURL } =
     useAccountContext();
+  const [loginErrorState, setLoginErrorState] = useState<boolean>(false);
+  const [loginErrorMessage, setLoginErrorMessage] = useState<string>('');
   const [emailValidationString, setEmailValidationString] =
     useState<string>('');
   const [passwordValidationString, setPasswordValidationString] =
@@ -47,13 +50,13 @@ const LoginPage: React.FC<{
 
   window.electron.ipcRenderer.once(CHANNELS.VerifyLogin, (arg: any) => {
     if (arg.valid) {
-      window.electron.ipcRenderer.sendMessage(CHANNELS.FetchServerData, {
-        email: email,
-        serverURL: serverURL,
-        password: password,
-      });
       props.triggerPageChange('Chat');
     } else {
+      setLoginErrorMessage(arg.message);
+      setLoginErrorState(true);
+      setTimeout(() => {
+        setLoginErrorState(false);
+      }, 4000);
     }
   });
 
@@ -87,6 +90,7 @@ const LoginPage: React.FC<{
       passwordValidationStatus
     ) {
       //Verify Login
+      // console.log(email, password, serverURL);
       window.electron.ipcRenderer.sendMessage(CHANNELS.VerifyLogin, {
         email: email,
         password: password,
@@ -104,6 +108,9 @@ const LoginPage: React.FC<{
       }}
       className={`LoginContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
     >
+      <AnimatePresence>
+        {loginErrorState ? <ErrorDialog message={loginErrorMessage} /> : null}
+      </AnimatePresence>
       {/* <div className="Title">Login</div> */}
       <div
         style={{

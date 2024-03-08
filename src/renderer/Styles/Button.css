@@ -55,11 +55,10 @@
   /* box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.37); */
 }
 
-.ButtonContainerDark:hover,
-.ButtonContainerLight:hover {
-  border-radius: 15px;
-  /* box-shadow: inset 0px 0px 10px 1px rgba(0, 0, 0, 0.212); */
-}
+/* .ButtonContainerDark:hover, */
+/* .ButtonContainerLight:hover { */
+/*   border-radius: 15px; */
+/* } */
 
 .ButtonContainerDark:active,
 .ButtonContainerLight:active {

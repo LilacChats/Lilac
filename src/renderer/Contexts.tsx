@@ -4,8 +4,14 @@ import {
   INITIAL_ACCOUNT_CONTEXT,
   INITIAL_KEYBINDS_CONTEXT,
   INITIAL_UI_STATE_CONTEXT,
+  INITIAL_MESSAGE_CONTEXT,
 } from '../objs';
-import { AccountContext, KeyBinds, KeyBindsContext } from '../types';
+import {
+  AccountContext,
+  KeyBinds,
+  KeyBindsContext,
+  MessageContext,
+} from '../types';
 import { useState } from 'react';
 
 const KeyBindContext: React.Context<KeyBindsContext> = createContext(
@@ -19,6 +25,21 @@ const AccountContext: React.Context<AccountContext> = createContext(
 const UIStateContext: React.Context<UIStateContext> = createContext(
   INITIAL_UI_STATE_CONTEXT,
 );
+
+const MessageContext: React.Context<MessageContext> = createContext(
+  INITIAL_MESSAGE_CONTEXT,
+);
+
+const MessageProvider: React.FC<any> = ({ children }) => {
+  const [message, setMessage] = useState<string>(
+    INITIAL_MESSAGE_CONTEXT.message,
+  );
+  return (
+    <MessageContext.Provider value={{ message, setMessage }}>
+      {children}
+    </MessageContext.Provider>
+  );
+};
 
 const UIStateProvider: React.FC<any> = ({ children }) => {
   const [mode, setMode] = useState<'light' | 'dark'>(
@@ -53,14 +74,17 @@ const AccountProvider: React.FC<any> = ({ children }) => {
   const [serverURL, setServerURL] = useState<string>(
     INITIAL_ACCOUNT_CONTEXT.serverURL,
   );
+  const [id, setID] = useState<string>(INITIAL_ACCOUNT_CONTEXT.id);
   return (
     <AccountContext.Provider
       value={{
         name,
+        id,
         email,
         password,
         pictureData,
         serverURL,
+        setID,
         setName,
         setEmail,
         setPassword,
@@ -76,6 +100,7 @@ const AccountProvider: React.FC<any> = ({ children }) => {
 const useKeyBindsContext = () => useContext(KeyBindContext);
 const useAccountContext = () => useContext(AccountContext);
 const useUIStateContext = () => useContext(UIStateContext);
+const useMessageContext = () => useContext(MessageContext);
 
 export {
   KeyBindsProvider,
@@ -84,4 +109,6 @@ export {
   useAccountContext,
   useUIStateContext,
   UIStateProvider,
+  MessageProvider,
+  useMessageContext,
 };

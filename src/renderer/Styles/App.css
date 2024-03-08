@@ -21,6 +21,13 @@ input {
   background-color: transparent;
 }
 
+textarea {
+  border: 0px;
+  outline: none;
+  background-color: transparent;
+  font-family: system-ui;
+}
+
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 0px;

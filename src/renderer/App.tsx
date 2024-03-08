@@ -1,4 +1,9 @@
-import { AccountProvider, KeyBindsProvider, UIStateProvider } from './Contexts';
+import {
+  AccountProvider,
+  KeyBindsProvider,
+  UIStateProvider,
+  MessageProvider,
+} from './Contexts';
 import './Styles/App.css';
 import { useState } from 'react';
 import LoginPage from './Pages/Login/index';
@@ -38,7 +43,9 @@ const App = () => {
                 }}
               />
             ) : (
-              <ChatHome />
+              <MessageProvider>
+                <ChatHome />
+              </MessageProvider>
             )}
             <UISwitcher />
           </KeyBindsProvider>

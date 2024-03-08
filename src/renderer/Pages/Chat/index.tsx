@@ -5,23 +5,65 @@ import Hamburger from '../../Components/Hamburger';
 import { CHANNELS } from '../../../objs';
 import { useAccountContext, useUIStateContext } from '../../Contexts';
 import HistoryItem from './HistoryItem';
+import MessageBox from './MessageBox';
+import ChatBox from './ChatBox';
+import CodeIcon from '../../Assets/code.svg';
+import MediaIcon from '../../Assets/media.svg';
+import FileIcon from '../../Assets/file.svg';
+import GraphIcon from '../../Assets/graph.svg';
 
 const ChatHome = () => {
-  const { pictureData } = useAccountContext();
+  const ATTACHMENTS: { name: string; icon: HTMLImageElement }[] = [
+    { name: 'Image/Video', icon: MediaIcon },
+    { name: 'Code', icon: CodeIcon },
+    { name: 'File', icon: FileIcon },
+    { name: 'Poll', icon: GraphIcon },
+  ];
+  const { id, pictureData, serverURL } = useAccountContext();
   const { mode } = useUIStateContext();
   const [serverListState, setServerListState] = useState<boolean>(false);
   const [loadingState, setLoadingState] = useState<boolean>(true);
+  const [groupData, setGroupData] = useState<{ Name: string; ID: string }[]>(
+    [],
+  );
+  const [dmData, setDMData] = useState<
+    { Name: string; ID: string; PictureData: string }[]
+  >([]);
   const [chatTypeState, setChatTypeState] = useState<number>(0);
+  const [attachmentListState, setAttachmentListState] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.sendMessage(CHANNELS.FetchServerData, {
+      type: chatTypeState == 0 ? 'Groups' : 'DM',
+      id: id,
+      serverURL: serverURL,
+    });
+  }, [chatTypeState]);
+
   window.electron.ipcRenderer.once(CHANNELS.FetchServerData, (arg) => {
+    if (chatTypeState == 0) setGroupData(arg.data);
+    else setDMData(arg.data);
     setLoadingState(false);
   });
+
   return (
     <motion.div
       className={`MainChatContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
     >
+      <motion.div className={`ServerList${mode == 'dark' ? 'Dark' : 'Light'}`}>
+        {Array.from({ length: 4 }, (index, item) => (
+          <div
+            key={index}
+            className={`ServerIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
+          >
+            Lilly's Team
+          </div>
+        ))}
+      </motion.div>
       <motion.div
         animate={{
-          transform: `translateX(${serverListState ? '80px' : '0%'})`,
+          transform: `translateX(${serverListState ? '150px' : '0%'})`,
           // left: serverListState ? 80 : 0,
         }}
         transition={{
@@ -40,6 +82,14 @@ const ChatHome = () => {
           >
             <div
               onClick={() => {
+                window.electron.ipcRenderer.sendMessage(
+                  CHANNELS.FetchServerData,
+                  {
+                    serverURL: serverURL,
+                    id: id,
+                    type: 'Groups',
+                  },
+                );
                 setChatTypeState(0);
               }}
               style={{
@@ -100,10 +150,57 @@ const ChatHome = () => {
                 </motion.div>
               ) : null}
             </AnimatePresence>
-            {Array.from({ length: 104 }, (_, index) => (
-              <HistoryItem />
-            ))}
+            {chatTypeState === 0
+              ? groupData.map((item, index) => {
+                  return (
+                    <HistoryItem key={index} data={item} type={chatTypeState} />
+                  );
+                })
+              : dmData.map((item, index) => {
+                  return (
+                    <HistoryItem key={index} data={item} type={chatTypeState} />
+                  );
+                })}
           </motion.div>
+        </motion.div>
+        <motion.div className="RightSubContainer">
+          <div style={{ height: '100px' }}></div>
+          <ChatBox />
+          <motion.div
+            style={{
+              height: attachmentListState ? '60px' : '10px',
+              opacity: attachmentListState ? '100%' : '0%',
+            }}
+            className={`AttachmentListContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
+          >
+            {ATTACHMENTS.map((item, index) => {
+              return (
+                <div
+                  style={{
+                    pointerEvents: attachmentListState ? 'all' : 'none',
+                  }}
+                  className={`AttachmentItem${mode == 'dark' ? 'Dark' : 'Light'}`}
+                >
+                  <img
+                    src={item.icon}
+                    style={{
+                      opacity: '50%',
+                      filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
+                      height: '25px',
+                      width: '25px',
+                    }}
+                  />
+                  {item.name}
+                </div>
+              );
+            })}
+          </motion.div>
+          <MessageBox
+            changeAttachmentState={(value: boolean) => {
+              setAttachmentListState(value);
+            }}
+            attachmentState={attachmentListState}
+          />
         </motion.div>
       </motion.div>
     </motion.div>

@@ -7,6 +7,8 @@ import {
   RegexObect,
   SignupAnimationObject,
   UIStateContext,
+  MessageContext,
+  Message,
 } from './types';
 
 const EMPTY_KEYBIND_OBJ: KeyBindingObject = { name: '', keyCombination: [] };
@@ -38,6 +40,8 @@ const INITIAL_ACCOUNT_CONTEXT: AccountContext = {
   password: '',
   pictureData: '',
   serverURL: '',
+  id: '',
+  setID: () => {},
   setName: () => {},
   setEmail: () => {},
   setPassword: () => {},
@@ -60,6 +64,7 @@ const CHANNELS: ChannelType = {
   VerifyLogin: 'VerifyLogin',
   FetchServerData: 'FetchServerData',
   SaveUIState: 'SaveUIState',
+  Signup: 'Signup',
 };
 
 const INITIAL_UI_STATE_CONTEXT: UIStateContext = {
@@ -67,6 +72,11 @@ const INITIAL_UI_STATE_CONTEXT: UIStateContext = {
   mode: 'dark',
   setMode: () => {},
   setPageID: () => {},
+};
+
+const INITIAL_MESSAGE_CONTEXT: MessageContext = {
+  message: '',
+  setMessage: (message: string) => {},
 };
 
 const REGEX_STRINGS: RegexObect = {
@@ -99,7 +109,83 @@ const SIGNUP_ANIMATION_OBJS: SignupAnimationObject = {
   },
 };
 
+const MESSAGES: Message[] = [
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: '',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: '',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: '',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+  {
+    type: 'text',
+    timestamp: parseInt(Date.now() / 1000),
+    senderID: 'xyz',
+    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+  },
+];
+
 export {
+  MESSAGES,
   EMPTY_KEYBINDS,
   INITIAL_KEYBINDS_CONTEXT,
   CHANNELS,
@@ -109,4 +195,5 @@ export {
   TO_RADIANS,
   SIGNUP_ANIMATION_OBJS,
   INITIAL_UI_STATE_CONTEXT,
+  INITIAL_MESSAGE_CONTEXT,
 };

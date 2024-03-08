@@ -61,94 +61,79 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
     });
 });
 
+ipcMain.on(CHANNELS.Signup, (event, arg) => {
+  axios
+    .post(
+      `${arg.serverURL}${arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'}usersignup`,
+      {
+        Name: arg.name,
+        Email: arg.email,
+        Password: arg.password,
+        PictureData: arg.pictureData,
+      },
+    )
+    .then((response) => {
+      console.log(response.data);
+      if (!response.data.Status) {
+        event.reply(CHANNELS.Signup, {
+          valid: false,
+          message: response.data.Message,
+        });
+      } else {
+        event.reply(CHANNELS.Signup, {
+          valid: true,
+          data: { id: response.data.ID },
+        });
+      }
+    });
+});
+
 ipcMain.on(CHANNELS.SaveUIState, (event, arg) => {
   filePath = process.cwd() + '\\src\\UserFiles\\UIState.json';
 });
 
 ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
-  // setTimeout(() => {
-  event.reply(CHANNELS.VerifyLogin, { valid: true });
-  // }, 5000);
+  axios
+    .post(
+      `${arg.serverURL}${arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'}login`,
+      {
+        Email: arg.email,
+        Password: arg.password,
+      },
+    )
+    .then((response) => {
+      console.log(response.data);
+      if (!response.data.Status) {
+        event.reply(CHANNELS.VerifyLogin, {
+          valid: false,
+          message: 'Wrong Login Details',
+        });
+      } else {
+        event.reply(CHANNELS.VerifyLogin, { valid: true });
+      }
+    })
+    .catch((err) => {
+      event.reply(CHANNELS.VerifyLogin, {
+        valid: false,
+        message: "Couldn't Connect to Server",
+      });
+    });
 });
 
 ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
-  setTimeout(() => {
-    event.reply(CHANNELS.FetchServerData, {});
-  }, 5000);
+  axios
+    .post(
+      `${arg.serverURL}${arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'}${arg.type == 'Groups' ? 'fetchgroups' : 'fetchusers'}`,
+      {
+        UserID: arg.id,
+      },
+    )
+    .then((response) => {
+      if (response.data.Status == true) {
+        event.reply(CHANNELS.FetchServerData, { data: response.data.Data });
+      }
+    });
 });
-
-// function fileExistsSync(filePath: string): boolean {
-//   try {
-//     fs.accessSync(filePath, fs.constants.F_OK);
-//     return true;
-//   } catch (err) {
-//     return false;
-//   }
-// }
-
-// ipcMain.on(CHANNELS.Override_INSECURE, async (event, arg: any) => {
-//   if (fileExistsSync(process.cwd() + '\\src\\UserFiles\\AccountData.json')) {
-//     var response = dialog.showMessageBoxSync(
-//       mainWindow ? mainWindow : new BrowserWindow({ width: 500, height: 200 }),
-//       {
-//         noLink: true,
-//         type: 'warning',
-//         message: 'ACCOUNT INFORMATION FOUND!\n\n\nEngage INSECURE OVERRIDE?',
-//         buttons: ['Confirm', 'Deny'],
-//         title: 'INSECURE OVERRIDE TRIGGERED',
-//       },
-//     );
-//     if (response == 0) {
-//       let profileData = require(
-//         process.cwd() + '\\src\\UserFiles\\AccountData.json',
-//       );
-//       event.reply(CHANNELS.Override_INSECURE, {
-//         override: true,
-//         data: profileData,
-//       });
-//     } else {
-//       process.exit(1);
-//     }
-//   } else {
-//     event.reply(CHANNELS.Override_INSECURE, {
-//       override: false,
-//       data: null,
-//     });
-//   }
-// });
-
-// ipcMain.on(CHANNELS.VerifyLogin, async (event, arg) => {
-//   let profileData = require(
-//     process.cwd() + '\\src\\UserFiles\\AccountData.json',
-//   );
-//   event.reply(CHANNELS.VerifyLogin, {
-//     validationObject: {
-//       emailValid: arg.email == profileData.email ? true : false,
-//       passwordValid: arg.password == profileData.password ? true : false,
-//     },
-//     data:
-//       arg.email == profileData.email && arg.password == profileData.password
-//         ? profileData
-//         : {},
-//   });
-// });
-
-// ipcMain.on(
-//   CHANNELS.SaveProfileData,
-//   async (event, arg: Signup_Request_Object) => {
-//     console.log(arg);
-//     fs.writeFile(
-//       process.cwd() + '\\src\\UserFiles\\AccountData.json',
-//       JSON.stringify(arg, null, 2),
-//       (err) => {
-//         //handle error here
-//       },
-//     );
-//     axios.post(arg.serverURL, arg).then((res) => {
-//       event.reply(CHANNELS.SaveProfileData, { id: res.data.id });
-//     });
-//   },
-// );
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

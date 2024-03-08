@@ -25,6 +25,7 @@ import SignupPageIndicator from '../../Components/SignupPageIndicator';
 import Page4 from './Page_4';
 import PictureEditPage from './PictureEditPage';
 import { AppPages } from '../../../types';
+import ErrorDialog from '../../Components/ErrorDialog';
 
 const md = '# Hi, *Pluto*!';
 
@@ -39,6 +40,7 @@ const SignupPage: React.FC<{
     password,
     serverURL,
     pictureData,
+    setID,
     setServerURL,
     setPictureData,
   } = useAccountContext();
@@ -53,6 +55,8 @@ const SignupPage: React.FC<{
   const [editPictureState, setEditPictureState] = useState<boolean>(false);
   const [pictureHoverState, setPictureHoverState] = useState<boolean>(false);
   const [direction, setDirection] = useState<string>('left');
+  const [signupErrorState, setSignupErrorState] = useState<boolean>(false);
+  const [signupErrorMessage, setSignupErrorMessage] = useState<string>('');
   const [controlFlowHandler, setControlFlowHandler] = useState<boolean>(false);
   const [pageInitialState, setPageInitialState] = useState<number>(0);
   const [crop, setCrop] = useState<Crop>();
@@ -135,6 +139,19 @@ const SignupPage: React.FC<{
       setPictureData('data:image/png;base64,' + args.data);
     },
   );
+
+  window.electron.ipcRenderer.once(CHANNELS.Signup, (args: any) => {
+    if (!args.valid) {
+      setSignupErrorState(true);
+      setSignupErrorMessage(args.message);
+      setTimeout(() => {
+        setSignupErrorState(false);
+      }, 4000);
+    } else {
+      setID(args.data.id);
+      props.triggerPageChange('Chat');
+    }
+  });
 
   const handleForwardMotion = () => {
     setDirection('left');
@@ -237,7 +254,14 @@ const SignupPage: React.FC<{
             <Page4
               data={md}
               onAccepted={() => {
-                props.triggerPageChange('Chat');
+                window.electron.ipcRenderer.sendMessage(CHANNELS.Signup, {
+                  email: email,
+                  name: name,
+                  serverURL: serverURL,
+                  pictureData: pictureData,
+                  password: password,
+                });
+                // props.triggerPageChange('Chat');
               }}
             />
           </PageContainer>

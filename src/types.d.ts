@@ -39,11 +39,18 @@ type AccountContext = {
   password: string;
   pictureData: string;
   serverURL: string;
+  id: string;
+  setID: (id: string) => void;
   setName: (name: string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   setPictureData: (pictureData: string) => void;
   setServerURL: (serverURL: string) => void;
+};
+
+type MessageContext = {
+  message: string;
+  setMessage: (message: string) => void;
 };
 
 type UIStateContext = {
@@ -64,6 +71,7 @@ type ChannelType = {
   VerifyLogin: 'VerifyLogin';
   FetchServerData: 'FetchServerData';
   SaveUIState: 'SaveUIState';
+  Signup: 'Signup';
 };
 
 type AppPages = 'Login' | 'Signup' | 'Chat';
@@ -121,7 +129,33 @@ type SignupAnimationObject = {
   initialRight: Object;
 };
 
+type PollMessageData = {
+  name: string;
+  voteCount: number;
+}[];
+
+type TextMessageData = string;
+
+type ImageMessageData = string;
+
+type VideoMessageData = string;
+
+type FileMessageData = string;
+
+type Message = {
+  timestamp: number;
+  senderID: string;
+  type: 'text' | 'code' | 'image' | 'video' | 'poll' | 'file';
+  data:
+    | TextMessageData
+    | ImageMessageData
+    | VideoMessageData
+    | FileMessageData
+    | PollMessageData;
+};
+
 export {
+  Message,
   KeyBinds,
   KeyBindingObject,
   ButtonProps,
@@ -138,4 +172,5 @@ export {
   PictureEditPageProps,
   PageContainerProps,
   UIStateContext,
+  MessageContext,
 };
