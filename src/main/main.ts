@@ -109,7 +109,10 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
           message: 'Wrong Login Details',
         });
       } else {
-        event.reply(CHANNELS.VerifyLogin, { valid: true });
+        event.reply(CHANNELS.VerifyLogin, {
+          data: response.data.Data,
+          valid: true,
+        });
       }
     })
     .catch((err) => {

@@ -11,6 +11,7 @@ import CodeIcon from '../../Assets/code.svg';
 import MediaIcon from '../../Assets/media.svg';
 import FileIcon from '../../Assets/file.svg';
 import GraphIcon from '../../Assets/graph.svg';
+import RocketIcon from '../../Assets/rocket.svg';
 
 const ChatHome = () => {
   const ATTACHMENTS: { name: string; icon: HTMLImageElement }[] = [
@@ -26,6 +27,15 @@ const ChatHome = () => {
   const [groupData, setGroupData] = useState<{ Name: string; ID: string }[]>(
     [],
   );
+  const [selectedGroup, setSelectedGroup] = useState<{
+    ID: string;
+    Name: string;
+  }>({ ID: '', Name: '' });
+  const [selectedDM, setSelectedDM] = useState<{
+    ID: string;
+    Name: string;
+    PictureData: string;
+  }>({ ID: '', Name: '', PictureData: '' });
   const [dmData, setDMData] = useState<
     { Name: string; ID: string; PictureData: string }[]
   >([]);
@@ -153,54 +163,124 @@ const ChatHome = () => {
             {chatTypeState === 0
               ? groupData.map((item, index) => {
                   return (
-                    <HistoryItem key={index} data={item} type={chatTypeState} />
+                    <HistoryItem
+                      onClick={(data) => {
+                        setSelectedGroup(data);
+                      }}
+                      key={index}
+                      data={item}
+                      type={chatTypeState}
+                    />
                   );
                 })
               : dmData.map((item, index) => {
                   return (
-                    <HistoryItem key={index} data={item} type={chatTypeState} />
+                    <HistoryItem
+                      onClick={(data) => {
+                        setSelectedDM(data);
+                      }}
+                      key={index}
+                      data={item}
+                      type={chatTypeState}
+                    />
                   );
                 })}
           </motion.div>
         </motion.div>
         <motion.div className="RightSubContainer">
-          <div style={{ height: '100px' }}></div>
-          <ChatBox />
-          <motion.div
-            style={{
-              height: attachmentListState ? '60px' : '10px',
-              opacity: attachmentListState ? '100%' : '0%',
-            }}
-            className={`AttachmentListContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
-          >
-            {ATTACHMENTS.map((item, index) => {
-              return (
-                <div
-                  style={{
-                    pointerEvents: attachmentListState ? 'all' : 'none',
-                  }}
-                  className={`AttachmentItem${mode == 'dark' ? 'Dark' : 'Light'}`}
-                >
+          {selectedGroup.ID != '' || selectedDM.ID != '' ? (
+            <>
+              <div
+                className={`TopProfileView${mode == 'dark' ? 'Dark' : 'Light'}`}
+              >
+                {chatTypeState == 1 ? (
                   <img
-                    src={item.icon}
-                    style={{
-                      opacity: '50%',
-                      filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
-                      height: '25px',
-                      width: '25px',
-                    }}
+                    className={`ProfilePicture${mode == 'dark' ? 'Dark' : 'Light'}`}
+                    src={pictureData}
                   />
-                  {item.name}
+                ) : null}
+                <div className="ChatBoxProfileContainer">
+                  <div>
+                    {chatTypeState == 0 ? selectedGroup.Name : selectedDM.Name}
+                  </div>
+                  <div
+                    className={`ProfileStatus${mode == 'dark' ? 'Dark' : 'Light'}`}
+                  >
+                    {chatTypeState == 0 ? (
+                      <div
+                        style={{
+                          borderRadius: '50px',
+                          width: '30px',
+                          paddingLeft: '10px',
+                          paddingRight: '10px',
+                          width: 'fit-content',
+                          color: mode == 'dark' ? 'black' : 'rgb(207,207,207)',
+                          background: mode == 'dark' ? 'rgb(75,75,75)' : '#989898',
+                        }}
+                      >
+                        {'24 '}
+                      </div>
+                    ) : null}
+                    Online
+                    <div
+                      className={`OnlineStatus${mode == 'dark' ? 'Dark' : 'Light'}`}
+                    ></div>
+                  </div>
                 </div>
-              );
-            })}
-          </motion.div>
-          <MessageBox
-            changeAttachmentState={(value: boolean) => {
-              setAttachmentListState(value);
-            }}
-            attachmentState={attachmentListState}
-          />
+              </div>
+              <ChatBox />
+              <motion.div
+                style={{
+                  height: attachmentListState ? '60px' : '10px',
+                  opacity: attachmentListState ? '100%' : '0%',
+                }}
+                className={`AttachmentListContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
+              >
+                {ATTACHMENTS.map((item, index) => {
+                  return (
+                    <div
+                      style={{
+                        pointerEvents: attachmentListState ? 'all' : 'none',
+                      }}
+                      className={`AttachmentItem${mode == 'dark' ? 'Dark' : 'Light'}`}
+                    >
+                      <img
+                        src={item.icon}
+                        style={{
+                          opacity: '50%',
+                          filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
+                          height: '25px',
+                          width: '25px',
+                        }}
+                      />
+                      {item.name}
+                    </div>
+                  );
+                })}
+              </motion.div>
+              <MessageBox
+                changeAttachmentState={(value: boolean) => {
+                  setAttachmentListState(value);
+                }}
+                attachmentState={attachmentListState}
+              />
+            </>
+          ) : (
+            <div
+              className={`EmptyChatContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
+            >
+              <img
+                style={{
+                  filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
+                  height: '200px',
+                  width: '200px',
+                  opacity: '0.05',
+                }}
+                src={RocketIcon}
+              />
+              <p style={{ opacity: '0.50' }}>Start a New Chat</p>
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </motion.div>

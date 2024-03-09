@@ -19,8 +19,16 @@ const LoginPage: React.FC<{
 }> = (props) => {
   const { mode } = useUIStateContext();
   const { keyBinds, setKeyBinds } = useKeyBindsContext();
-  const { email, password, serverURL, setEmail, setPassword, setServerURL } =
-    useAccountContext();
+  const {
+    email,
+    password,
+    serverURL,
+    setPictureData,
+    setName,
+    setEmail,
+    setPassword,
+    setServerURL,
+  } = useAccountContext();
   const [loginErrorState, setLoginErrorState] = useState<boolean>(false);
   const [loginErrorMessage, setLoginErrorMessage] = useState<string>('');
   const [emailValidationString, setEmailValidationString] =
@@ -49,7 +57,10 @@ const LoginPage: React.FC<{
   }
 
   window.electron.ipcRenderer.once(CHANNELS.VerifyLogin, (arg: any) => {
+    // console.log(arg.data);
     if (arg.valid) {
+      setName(arg.data.Name);
+      setPictureData(arg.data.PictureData);
       props.triggerPageChange('Chat');
     } else {
       setLoginErrorMessage(arg.message);
