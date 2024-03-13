@@ -27,6 +27,8 @@ const EMPTY_KEYBINDS: KeyBinds = {
   SEND_CHAT: EMPTY_KEYBIND_OBJ,
   EDIT_PICTURE: EMPTY_KEYBIND_OBJ,
   SAVE_PICTURE: EMPTY_KEYBIND_OBJ,
+  ADD_GROUP: EMPTY_KEYBIND_OBJ,
+  CANCEL_GROUP: EMPTY_KEYBIND_OBJ,
 };
 
 const INITIAL_KEYBINDS_CONTEXT = {
@@ -65,11 +67,14 @@ const CHANNELS: ChannelType = {
   FetchServerData: 'FetchServerData',
   SaveUIState: 'SaveUIState',
   Signup: 'Signup',
+  AddGroup: 'AddGroup',
 };
 
 const INITIAL_UI_STATE_CONTEXT: UIStateContext = {
   pageID: 0,
   mode: 'dark',
+  addGroupDialogState: false,
+  setAddGroupDialogState: () => {},
   setMode: () => {},
   setPageID: () => {},
 };
@@ -112,73 +117,73 @@ const SIGNUP_ANIMATION_OBJS: SignupAnimationObject = {
 const MESSAGES: Message[] = [
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: '',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: '',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: '',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },
   {
     type: 'text',
-    timestamp: parseInt(Date.now() / 1000),
+    timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
     data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
   },

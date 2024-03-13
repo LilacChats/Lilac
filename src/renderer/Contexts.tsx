@@ -11,6 +11,7 @@ import {
   KeyBinds,
   KeyBindsContext,
   MessageContext,
+  UIStateContext,
 } from '../types';
 import { useState } from 'react';
 
@@ -45,9 +46,21 @@ const UIStateProvider: React.FC<any> = ({ children }) => {
   const [mode, setMode] = useState<'light' | 'dark'>(
     INITIAL_UI_STATE_CONTEXT.mode,
   );
+  const [addGroupDialogState, setAddGroupDialogState] = useState<boolean>(
+    INITIAL_UI_STATE_CONTEXT.addGroupDialogState,
+  );
   const [pageID, setPageID] = useState<number>(INITIAL_UI_STATE_CONTEXT.pageID);
   return (
-    <UIStateContext.Provider value={{ mode, setMode, pageID, setPageID }}>
+    <UIStateContext.Provider
+      value={{
+        addGroupDialogState,
+        setAddGroupDialogState,
+        mode,
+        setMode,
+        pageID,
+        setPageID,
+      }}
+    >
       {children}
     </UIStateContext.Provider>
   );

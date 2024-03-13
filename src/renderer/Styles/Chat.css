@@ -35,6 +35,41 @@
   background-color: #2f2f2f;
 }
 
+.AddGroupContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  backdrop-filter: blur(5px);
+  z-index: 5;
+  background: #0000003b;
+}
+
+.AddGroupDialogDark,
+.AddGroupDialogLight {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  justify-content: center;
+  align-items: center;
+  /* height: 50%; */
+  border-radius: 20px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.AddGroupDialogDark {
+  background: #2f2f2f;
+}
+
+.AddGroupDialogLight {
+  background: rgb(207, 207, 207);
+}
+
 .ServerContainerDark,
 .ServerContainerLight {
   display: flex;
@@ -209,13 +244,13 @@
 .HistoryItemLight {
   width: 100%;
   cursor: pointer;
-  min-height: 70px;
+  min-height: 50px;
   border-radius: 5px;
-  padding: 10px;
+  /* padding: 10px; */
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 
@@ -440,14 +475,6 @@
   padding: 10px;
   box-sizing: border-box;
   overflow-y: auto;
-}
-
-.ChatBoxContainerDark {
-  /* background: #202020; */
-}
-
-.ChatBoxContainerLight {
-  /* background: #bdbdbd; */
 }
 
 .MessageBoxContainerLight,

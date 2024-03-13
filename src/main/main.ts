@@ -64,7 +64,9 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
 ipcMain.on(CHANNELS.Signup, (event, arg) => {
   axios
     .post(
-      `${arg.serverURL}${arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'}usersignup`,
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }usersignup`,
       {
         Name: arg.name,
         Email: arg.email,
@@ -89,13 +91,15 @@ ipcMain.on(CHANNELS.Signup, (event, arg) => {
 });
 
 ipcMain.on(CHANNELS.SaveUIState, (event, arg) => {
-  filePath = process.cwd() + '\\src\\UserFiles\\UIState.json';
+  var filePath = process.cwd() + '\\src\\UserFiles\\UIState.json';
 });
 
 ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
   axios
     .post(
-      `${arg.serverURL}${arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'}login`,
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }login`,
       {
         Email: arg.email,
         Password: arg.password,
@@ -126,14 +130,55 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
 ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
   axios
     .post(
-      `${arg.serverURL}${arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'}${arg.type == 'Groups' ? 'fetchgroups' : 'fetchusers'}`,
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }${arg.type == 'Groups' ? 'fetchgroups' : 'fetchusers'}`,
       {
         UserID: arg.id,
       },
     )
     .then((response) => {
-      if (response.data.Status == true) {
-        event.reply(CHANNELS.FetchServerData, { data: response.data.Data });
+      if (response.data.Status) {
+        console.log(response.data.Data);
+        event.reply(CHANNELS.FetchServerData, {
+          data: response.data.Data,
+          type: arg.type,
+        });
+      }
+    });
+});
+
+ipcMain.on(CHANNELS.AddGroup, (event, arg) => {
+  axios
+    .post(
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }creategroup`,
+      {
+        UserID: arg.id,
+        GroupName: arg.name,
+        Members: arg.members,
+      },
+    )
+    .then((response) => {
+      if (response.data.Status) {
+        axios
+          .post(
+            `${arg.serverURL}${
+              arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+            }fetchgroups`,
+            {
+              UserID: arg.id,
+            },
+          )
+          .then((response) => {
+            if (response.data.Status) {
+              event.reply(CHANNELS.FetchServerData, {
+                data: response.data.Data,
+                type: 'Groups',
+              });
+            }
+          });
       }
     });
 });

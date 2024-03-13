@@ -50,5 +50,13 @@
   "SAVE_PICTURE": {
     "name": "Save",
     "keyCombination": ["/", "s", "p"]
+  },
+  "ADD_GROUP": {
+    "name": "Add Group",
+    "keyCombination": ["/", "a", "g"]
+  },
+  "CANCEL_GROUP": {
+    "name": "Cancel",
+    "keyCombination": ["/", "c", "g"]
   }
 }

@@ -181,7 +181,7 @@ const LoginPage: React.FC<{
             setServerURL('');
             props.triggerPageChange('Signup');
           }}
-          className="CreateAccountLink"
+          // className="CreateAccountLink"
         />
       </div>
     </motion.div>

@@ -21,6 +21,14 @@ type KeyBinds = {
   SEND_CHAT: KeyBindingObject;
   EDIT_PICTURE: KeyBindingObject;
   SAVE_PICTURE: KeyBindingObject;
+  ADD_GROUP: KeyBindingObject;
+  CANCEL_GROUP: KeyBindingObject;
+};
+
+type DMData = {
+  Name: string;
+  ID: string;
+  PictureData: string;
 };
 
 type ButtonProps = {
@@ -54,6 +62,8 @@ type MessageContext = {
 };
 
 type UIStateContext = {
+  addGroupDialogState: boolean;
+  setAddGroupDialogState: (addGroupDialogState: boolean) => void;
   mode: 'dark' | 'light';
   setMode: (mode: 'dark' | 'light') => void;
   pageID: number;
@@ -72,6 +82,7 @@ type ChannelType = {
   FetchServerData: 'FetchServerData';
   SaveUIState: 'SaveUIState';
   Signup: 'Signup';
+  AddGroup: "AddGroup"
 };
 
 type AppPages = 'Login' | 'Signup' | 'Chat';
@@ -173,4 +184,5 @@ export {
   PageContainerProps,
   UIStateContext,
   MessageContext,
+  DMData,
 };
