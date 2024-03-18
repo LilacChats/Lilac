@@ -1,9 +1,7 @@
 import {
   AccountContext,
-  ChannelType,
   KeyBindingObject,
   KeyBinds,
-  Placeholders,
   RegexObect,
   SignupAnimationObject,
   UIStateContext,
@@ -29,6 +27,8 @@ const EMPTY_KEYBINDS: KeyBinds = {
   SAVE_PICTURE: EMPTY_KEYBIND_OBJ,
   ADD_GROUP: EMPTY_KEYBIND_OBJ,
   CANCEL_GROUP: EMPTY_KEYBIND_OBJ,
+  UPDATE_GROUP: EMPTY_KEYBIND_OBJ,
+  PROCEED: EMPTY_KEYBIND_OBJ,
 };
 
 const INITIAL_KEYBINDS_CONTEXT = {
@@ -53,22 +53,25 @@ const INITIAL_ACCOUNT_CONTEXT: AccountContext = {
 
 const TO_RADIANS = Math.PI / 180;
 
-const INPUT_PLACEHOLDERS: Placeholders = {
-  EMAIL: 'Enter your Email Address',
-  NAME: 'Enter your Name',
-  PASSWORD: 'Enter your Password',
-  SERVER: 'Enter Server URL',
-};
+const enum INPUT_PLACEHOLDERS {
+  EMAIL = 'Enter your Email Address',
+  NAME = 'Enter your Name',
+  PASSWORD = 'Enter your Password',
+  SERVER = 'Enter Server URL',
+}
 
-const CHANNELS: ChannelType = {
-  LoadKeyBinds: 'LoadKeyBinds',
-  SelectProfilePicture: 'SelectProfilePicture',
-  VerifyLogin: 'VerifyLogin',
-  FetchServerData: 'FetchServerData',
-  SaveUIState: 'SaveUIState',
-  Signup: 'Signup',
-  AddGroup: 'AddGroup',
-};
+const enum CHANNELS {
+  LoadKeyBinds = 'LoadKeyBinds',
+  SelectProfilePicture = 'SelectProfilePicture',
+  VerifyLogin = 'VerifyLogin',
+  FetchServerData = 'FetchServerData',
+  SaveUIState = 'SaveUIState',
+  Signup = 'Signup',
+  AddGroup = 'AddGroup',
+  DeleteGroup = 'DeleteGroup',
+  FetchGroupData = 'FetchGroupData',
+  UpdateGroup = 'UpdateGroup',
+}
 
 const INITIAL_UI_STATE_CONTEXT: UIStateContext = {
   pageID: 0,

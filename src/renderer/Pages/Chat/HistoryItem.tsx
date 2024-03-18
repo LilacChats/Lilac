@@ -1,30 +1,35 @@
 import { motion } from 'framer-motion';
-import { useUIStateContext } from '../../Contexts';
+import { useAccountContext, useUIStateContext } from '../../Contexts';
 import PeopleIcon from '../../Assets/people.svg';
 import '../../Styles/Chat.css';
-import { useState } from 'react';
+import { MutableRefObject, useState } from 'react';
 import DotsIcon from '../../Assets/kebab-horizontal.svg';
 import EditIcon from '../../Assets/pencil.svg';
 import TrashIcon from '../../Assets/trash.svg';
 import BellIcon from '../../Assets/bell.svg';
 import MuteIcon from '../../Assets/bell-slash.svg';
+import { CHANNELS } from '../../../objs';
+import GroupManageDialog from './GroupManageDialog';
 
 const HistoryItem: React.FC<{
-  data?:
-    | { Name: string; ID: string; PictureData: string }
-    | { Name: string; ID: string };
+  data?: { name: string; id: string; pictureData?: string; active?: boolean };
   type: 0 | 1;
   onClick: Function;
+  key: number;
 }> = (props) => {
   const { mode } = useUIStateContext();
+  const { serverURL, id } = useAccountContext();
   const [hoverState, setHoverState] = useState<boolean>(false);
   const [groupMutedState, setGroupMutedState] = useState<boolean>(false);
+  const [editGroupState, setEditGroupState] = useState<boolean>(false);
   return (
     <>
       {props.type == 1 ? (
         <motion.div
+          key={props.key}
           style={{
             justifyContent: 'flex-start',
+            padding: '10px 0px 0px 10px',
           }}
           className={`HistoryItem${mode == 'dark' ? 'Dark' : 'Light'}`}
         >
@@ -35,9 +40,9 @@ const HistoryItem: React.FC<{
               <img
                 className={`ProfilePicture${mode == 'dark' ? 'Dark' : 'Light'}`}
                 src={
-                  props.data.hasOwnProperty('PictureData')
-                    ? props.data.PictureData
-                    : null
+                  props.data.hasOwnProperty('pictureData')
+                    ? props.data.pictureData
+                    : ''
                 }
               />
             ) : null}
@@ -54,7 +59,7 @@ const HistoryItem: React.FC<{
                   color: mode == 'dark' ? '#bdbdbd' : '#2f2f2f',
                 }}
               >
-                {props.data.Name}
+                {props.data.name}
               </div>
             )}
             <motion.div
@@ -63,79 +68,116 @@ const HistoryItem: React.FC<{
           </motion.div>
         </motion.div>
       ) : (
-        <motion.div
-          className="GroupItem"
-          style={{
-            minHeight: hoverState ? '80px' : '40px',
-            background: mode == 'dark' ? '#2f2f2f' : 'rgb(207,207,207)',
-            paddingBottom: hoverState ? '10px' : '0px',
-          }}
-        >
-          <motion.div
-            onClick={() => {
-              if (props.data) {
-                props.onClick(props.data);
-              }
-            }}
-            className={`HistoryItem${
-              mode == 'dark' ? 'Dark' : 'Light'
-            } GroupSubContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
-          >
-            <div className="GroupLabelContainer">
-              <img
-                src={PeopleIcon}
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
-                }}
-              />
-              {props.data?.Name}
-            </div>
-            <img
+        <>
+          {!editGroupState ? (
+            <motion.div
+              className="GroupItem"
               style={{
-                opacity: '0.5',
-                marginTop: '-10px',
-                filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
+                minHeight: hoverState ? '70px' : '40px',
+                background: mode == 'dark' ? '#2f2f2f' : 'rgb(207,207,207)',
+                paddingBottom: hoverState ? '5px' : '5px',
               }}
-              onClick={() => {
-                setHoverState(!hoverState);
-              }}
-              src={DotsIcon}
-            />
-          </motion.div>
-          {hoverState ? (
-            <div className="HistoryItemOptions">
-              <motion.div
-                className={`EditIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
-              >
-                <img
-                  className={`Icon${mode == 'dark' ? 'Dark' : 'Light'}`}
-                  src={EditIcon}
-                />
-              </motion.div>
-              <motion.div
-                className={`EditIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
-              >
-                <img
-                  className={`Icon${mode == 'dark' ? 'Dark' : 'Light'}`}
-                  src={TrashIcon}
-                />
-              </motion.div>
+            >
               <motion.div
                 onClick={() => {
-                  setGroupMutedState(!groupMutedState);
+                  if (props.data) {
+                    props.onClick(props.data);
+                  }
                 }}
-                className={`EditIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                className={`HistoryItem${
+                  mode == 'dark' ? 'Dark' : 'Light'
+                } GroupSubContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
               >
+                <div className="GroupLabelContainer">
+                  <img
+                    src={PeopleIcon}
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
+                    }}
+                  />
+                  {props.data?.name}
+                </div>
                 <img
-                  className={`Icon${mode == 'dark' ? 'Dark' : 'Light'}`}
-                  src={groupMutedState ? MuteIcon : BellIcon}
+                  style={{
+                    opacity: '0.5',
+                    marginTop: '-10px',
+                    filter: mode == 'dark' ? 'invert(50)' : 'invert(0)',
+                  }}
+                  onClick={() => {
+                    var tempState = hoverState;
+                    setHoverState(!tempState);
+                  }}
+                  src={DotsIcon}
                 />
               </motion.div>
-            </div>
-          ) : null}
-        </motion.div>
+              {hoverState ? (
+                <div className="HistoryItemOptions">
+                  <motion.div
+                    onClick={() => {
+                      setEditGroupState(true);
+                    }}
+                    className={`EditIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                  >
+                    <img
+                      className={`Icon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                      src={EditIcon}
+                    />
+                  </motion.div>
+                  <motion.div
+                    onClick={() => {
+                      window.electron.ipcRenderer.sendMessage(
+                        CHANNELS.DeleteGroup,
+                        {
+                          groupID: props.data?.id,
+                          serverURL: serverURL,
+                          id: id,
+                        },
+                      );
+                    }}
+                    className={`EditIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                  >
+                    <img
+                      className={`Icon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                      src={TrashIcon}
+                    />
+                  </motion.div>
+                  <motion.div
+                    onClick={() => {
+                      setGroupMutedState(!groupMutedState);
+                    }}
+                    className={`EditIcon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                  >
+                    <img
+                      className={`Icon${mode == 'dark' ? 'Dark' : 'Light'}`}
+                      src={groupMutedState ? MuteIcon : BellIcon}
+                    />
+                  </motion.div>
+                </div>
+              ) : null}
+            </motion.div>
+          ) : (
+            <motion.div
+              style={{
+                padding: '10px',
+                background: mode == 'dark' ? '#2f2f2f' : 'rgb(207,207,207)',
+                borderRadius: '5px',
+              }}
+            >
+              <GroupManageDialog
+                mode="update"
+                data={{
+                  name: props.data?.name ? props.data.name : '',
+                  id: props.data?.id ? props.data.id : '',
+                }}
+                displayStateChanged={(state: boolean) => {
+                  setEditGroupState(state);
+                }}
+              />
+            </motion.div>
+          )}
+        </>
       )}
     </>
   );

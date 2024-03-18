@@ -1,4 +1,3 @@
-import { TargetAndTransition, VariantLabels } from 'framer-motion';
 import { ComponentProps } from 'react';
 import { Crop, PercentCrop, PixelCrop } from 'react-image-crop';
 
@@ -23,12 +22,14 @@ type KeyBinds = {
   SAVE_PICTURE: KeyBindingObject;
   ADD_GROUP: KeyBindingObject;
   CANCEL_GROUP: KeyBindingObject;
+  UPDATE_GROUP: KeyBindingObject;
+  PROCEED: KeyBindingObject;
 };
 
 type DMData = {
-  Name: string;
-  ID: string;
-  PictureData: string;
+  name: string;
+  id: string;
+  pictureData: string;
 };
 
 type ButtonProps = {
@@ -75,26 +76,9 @@ type FileDialogObject = {
   canceled: boolean;
 };
 
-type ChannelType = {
-  LoadKeyBinds: 'LoadKeyBinds';
-  SelectProfilePicture: 'SelectProfilePicture';
-  VerifyLogin: 'VerifyLogin';
-  FetchServerData: 'FetchServerData';
-  SaveUIState: 'SaveUIState';
-  Signup: 'Signup';
-  AddGroup: "AddGroup"
-};
-
 type AppPages = 'Login' | 'Signup' | 'Chat';
 
 type InputBoxTypes = 'name' | 'email' | 'password' | 'server';
-
-type Placeholders = {
-  NAME: string;
-  EMAIL: string;
-  PASSWORD: string;
-  SERVER: string;
-};
 
 type RegexObect = {
   NAME: RegExp;
@@ -171,10 +155,8 @@ export {
   KeyBindingObject,
   ButtonProps,
   KeyBindsContext,
-  ChannelType,
   AppPages,
   InputBoxProps,
-  Placeholders,
   RegexObect,
   AccountContext,
   InputBoxTypes,

@@ -8,6 +8,20 @@
   left: 0px;
 }
 
+.GroupDeletionNoticeLight,
+.GroupDeletionNoticeDark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.GroupDeletionNoticeDark {
+  color: #989898;
+}
+
 .MainChatContainerDark {
   background-color: #252525;
 }

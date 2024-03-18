@@ -29,7 +29,7 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg: {}) => {
+ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg) => {
   let maxChars = 0,
     data = require('../../Configs/KeyBindings.json');
   for (const key in data) {
@@ -40,7 +40,61 @@ ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg: {}) => {
   event.reply(CHANNELS.LoadKeyBinds, { maxChars: maxChars, keyBinds: data });
 });
 
-ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg: {}) => {
+ipcMain.on(CHANNELS.FetchGroupData, (event, arg) => {
+  axios
+    .post(
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }fetchgroupdata`,
+      {
+        userid: arg.id,
+        groupid: arg.groupID,
+      },
+    )
+    .then((response) => {
+      console.log('55->', response.data);
+      event.reply(CHANNELS.FetchGroupData, response.data.data.members);
+    });
+});
+
+ipcMain.on(CHANNELS.UpdateGroup, (event, arg) => {
+  axios
+    .post(
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }updategroupdata`,
+      {
+        name: arg.name,
+        userID: arg.userID,
+        members: arg.members,
+        groupID: arg.groupID,
+      },
+    )
+    .then((groupResponse) => {
+      if (groupResponse.data.status) {
+        console.log('SENT');
+        axios
+          .post(
+            `${arg.serverURL}${
+              arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+            }fetchgroups`,
+            {
+              userID: arg.userID,
+            },
+          )
+          .then((response) => {
+            if (response.data.status) {
+              event.reply(CHANNELS.FetchServerData, {
+                data: response.data.data,
+                type: 'Groups',
+              });
+            }
+          });
+      }
+    });
+});
+
+ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg) => {
   dialog
     .showOpenDialog({ properties: ['openFile'] })
     .then((res: FileDialogObject) => {
@@ -68,23 +122,22 @@ ipcMain.on(CHANNELS.Signup, (event, arg) => {
         arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
       }usersignup`,
       {
-        Name: arg.name,
-        Email: arg.email,
-        Password: arg.password,
-        PictureData: arg.pictureData,
+        name: arg.name,
+        email: arg.email,
+        password: arg.password,
+        pictureData: arg.pictureData,
       },
     )
     .then((response) => {
-      console.log(response.data);
-      if (!response.data.Status) {
+      if (!response.data.status) {
         event.reply(CHANNELS.Signup, {
           valid: false,
-          message: response.data.Message,
+          message: response.data.message,
         });
       } else {
         event.reply(CHANNELS.Signup, {
           valid: true,
-          data: { id: response.data.ID },
+          data: { id: response.data.id },
         });
       }
     });
@@ -101,20 +154,19 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
         arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
       }login`,
       {
-        Email: arg.email,
-        Password: arg.password,
+        email: arg.email,
+        password: arg.password,
       },
     )
     .then((response) => {
-      console.log(response.data);
-      if (!response.data.Status) {
+      if (!response.data.status) {
         event.reply(CHANNELS.VerifyLogin, {
           valid: false,
           message: 'Wrong Login Details',
         });
       } else {
         event.reply(CHANNELS.VerifyLogin, {
-          data: response.data.Data,
+          data: response.data.data,
           valid: true,
         });
       }
@@ -134,16 +186,50 @@ ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
         arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
       }${arg.type == 'Groups' ? 'fetchgroups' : 'fetchusers'}`,
       {
-        UserID: arg.id,
+        userID: arg.id,
       },
     )
     .then((response) => {
-      if (response.data.Status) {
-        console.log(response.data.Data);
+      if (response.data.status) {
+        console.log(response.data);
         event.reply(CHANNELS.FetchServerData, {
-          data: response.data.Data,
+          data: response.data.data,
           type: arg.type,
         });
+      }
+    });
+});
+
+ipcMain.on(CHANNELS.DeleteGroup, (event, arg) => {
+  axios
+    .post(
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }deletegroup`,
+      {
+        userID: arg.id,
+        groupID: arg.groupID,
+      },
+    )
+    .then((response) => {
+      if (response.data.status) {
+        axios
+          .post(
+            `${arg.serverURL}${
+              arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+            }fetchgroups`,
+            {
+              userID: arg.id,
+            },
+          )
+          .then((response) => {
+            if (response.data.status) {
+              event.reply(CHANNELS.FetchServerData, {
+                data: response.data.data,
+                type: 'Groups',
+              });
+            }
+          });
       }
     });
 });
@@ -155,26 +241,26 @@ ipcMain.on(CHANNELS.AddGroup, (event, arg) => {
         arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
       }creategroup`,
       {
-        UserID: arg.id,
-        GroupName: arg.name,
-        Members: arg.members,
+        userID: arg.id,
+        groupName: arg.name,
+        members: arg.members,
       },
     )
     .then((response) => {
-      if (response.data.Status) {
+      if (response.data.status) {
         axios
           .post(
             `${arg.serverURL}${
               arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
             }fetchgroups`,
             {
-              UserID: arg.id,
+              userID: arg.id,
             },
           )
           .then((response) => {
-            if (response.data.Status) {
+            if (response.data.status) {
               event.reply(CHANNELS.FetchServerData, {
-                data: response.data.Data,
+                data: response.data.data,
                 type: 'Groups',
               });
             }

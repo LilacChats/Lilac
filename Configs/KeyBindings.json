@@ -58,5 +58,13 @@
   "CANCEL_GROUP": {
     "name": "Cancel",
     "keyCombination": ["/", "c", "g"]
+  },
+  "UPDATE_GROUP": {
+    "name": "Update Group",
+    "keyCombination": ["/", "u", "g"]
+  },
+  "PROCEED": {
+    "name": "Proceed",
+    "keyCombination": ["/", "p"]
   }
 }

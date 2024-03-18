@@ -1,13 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import '../../Styles/Chat.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Hamburger from '../../Components/Hamburger';
 import { CHANNELS } from '../../../objs';
-import {
-  useAccountContext,
-  useKeyBindsContext,
-  useUIStateContext,
-} from '../../Contexts';
+import { useAccountContext, useUIStateContext } from '../../Contexts';
 import HistoryItem from './HistoryItem';
 import MessageBox from './MessageBox';
 import ChatBox from './ChatBox';
@@ -17,12 +13,8 @@ import FileIcon from '../../Assets/file.svg';
 import GraphIcon from '../../Assets/graph.svg';
 import RocketIcon from '../../Assets/rocket.svg';
 import PlusIcon from '../../Assets/plus-circle.svg';
-import AddGroup from './AddGroup';
-import Button from '../../Components/Button';
-import SelectUserDialog from '../../Components/SelectUserDialog';
-import EditIcon from '../../Assets/pencil.svg';
 import { DMData } from '../../../types';
-import CrossCircleIcon from '../../Assets/x-circle.svg';
+import GroupManageDialog from './GroupManageDialog';
 
 const ChatHome = () => {
   const ATTACHMENTS: { name: string; icon: string }[] = [
@@ -32,32 +24,27 @@ const ChatHome = () => {
     { name: 'Poll', icon: GraphIcon },
   ];
   const { id, pictureData, serverURL } = useAccountContext();
-  const { keyBinds } = useKeyBindsContext();
-  const { mode, addGroupDialogState, setAddGroupDialogState } =
-    useUIStateContext();
+  const { mode } = useUIStateContext();
   const [serverListState, setServerListState] = useState<boolean>(false);
   const [createGroupState, setCreateGroupState] = useState<boolean>(false);
-  const [selectedUsers, setSelectedUsers] = useState<DMData[]>([]);
-  const [groupNameEditState, setGroupNameEditState] = useState<boolean>(false);
   const [loadingState, setLoadingState] = useState<boolean>(true);
   const [groupData, setGroupData] = useState<
-    { Name: string; ID: string; Members: string[] }[]
+    { name: string; id: string; members: string[]; active?: boolean }[]
   >([]);
   const [selectedGroup, setSelectedGroup] = useState<{
-    ID: string;
-    Name: string;
-    Members: string[];
-  }>({ ID: '', Name: '', Members: [] });
+    id: string;
+    name: string;
+    members: string[];
+  }>({ id: '', name: '', members: [] });
   const [selectedDM, setSelectedDM] = useState<DMData>({
-    ID: '',
-    Name: '',
-    PictureData: '',
+    id: '',
+    name: '',
+    pictureData: '',
   });
   const [dmData, setDMData] = useState<DMData[]>([]);
   const [chatTypeState, setChatTypeState] = useState<0 | 1>(0);
   const [attachmentListState, setAttachmentListState] =
     useState<boolean>(false);
-  const [groupName, setGroupName] = useState<string>('');
 
   useEffect(() => {
     window.electron.ipcRenderer.sendMessage(CHANNELS.FetchServerData, {
@@ -67,10 +54,14 @@ const ChatHome = () => {
     });
   }, [chatTypeState]);
 
-  window.electron.ipcRenderer.once(CHANNELS.FetchServerData, (arg: any) => {
+  window.electron.ipcRenderer.on(CHANNELS.FetchServerData, (arg: any) => {
     if (chatTypeState == 0 && arg.type == 'Groups') {
       if (arg.data) {
         if (arg.data.length > 0) {
+          for (var i = 0; i < arg.data.length; i++) {
+            arg.data[i].active = false;
+          }
+          console.log('data->', arg.data);
           setGroupData(arg.data);
           setDMData([]);
         } else setGroupData([]);
@@ -79,8 +70,10 @@ const ChatHome = () => {
         setDMData([]);
       }
     } else if (chatTypeState == 1 && arg.type == 'DM') {
-      if (arg.data.length > 0) setDMData(arg.data);
-      else setDMData([]);
+      if (arg.data.length > 0) {
+        console.log(arg.data);
+        setDMData(arg.data);
+      } else setDMData([]);
     }
     setLoadingState(false);
   });
@@ -89,9 +82,6 @@ const ChatHome = () => {
     <motion.div
       className={`MainChatContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
     >
-      <AnimatePresence>
-        {addGroupDialogState ? <AddGroup /> : null}
-      </AnimatePresence>
       <motion.div className={`ServerList${mode == 'dark' ? 'Dark' : 'Light'}`}>
         {Array.from({ length: 4 }, (index: number, _) => (
           <div
@@ -235,152 +225,30 @@ const ChatHome = () => {
                     </AnimatePresence>
                     <AnimatePresence>
                       {createGroupState ? (
-                        <motion.div
-                          initial={{
-                            scale: 0,
+                        <GroupManageDialog
+                          mode="create"
+                          displayStateChanged={(state: boolean) => {
+                            setCreateGroupState(state);
                           }}
-                          animate={{
-                            scale: 1,
-                          }}
-                          transition={{
-                            duration: 0.1,
-                          }}
-                          exit={{
-                            scale: 0,
-                          }}
-                          style={{
-                            // transition: '4s all',
-                            width: '100%',
-                            flexDirection: 'column',
-                            display: 'flex',
-                            gap: '10px',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <div
-                            style={{
-                              color: mode == 'dark' ? '#bdbdbd' : '#2f2f2f',
-                              fontSize: '20px',
-                              display: 'flex',
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              gap: '10px',
-                              width: '100%',
-                            }}
-                          >
-                            {groupNameEditState ? (
-                              <input
-                                value={groupName}
-                                onChange={(e) => {
-                                  setGroupName(e.target.value);
-                                }}
-                                style={{
-                                  fontSize: '15px',
-                                  width: '70%',
-                                  height: '30px',
-                                  borderBottom: `1px solid ${
-                                    mode == 'dark' ? '#bdbdbd' : '#2f2f2f'
-                                  }`,
-                                  color: mode == 'dark' ? '#bdbdbd' : '#2f2f2f',
-                                }}
-                                type="text"
-                                placeholder="Enter Group Name"
-                              />
-                            ) : (
-                              <div>Group</div>
-                            )}
-                            <img
-                              onClick={() => {
-                                setGroupNameEditState(!groupNameEditState);
-                              }}
-                              src={
-                                groupNameEditState ? CrossCircleIcon : EditIcon
-                              }
-                              style={{
-                                width: '20px',
-                                height: '20px',
-                                opacity: '0.5',
-                                filter:
-                                  mode == 'dark' ? 'invert(50)' : 'invert(0)',
-                              }}
-                            />
-                          </div>
-                          <SelectUserDialog
-                            onChange={(data: any) => {
-                              var tempData: DMData[] = [];
-                              for (var i = 0; i < data.length; i++) {
-                                if (data[i].selected)
-                                  tempData.push({
-                                    ID: data[i].ID,
-                                    Name: data[i].Name,
-                                    PictureData: data[i].PictureData,
-                                  });
-                              }
-                              setSelectedUsers(tempData);
-                            }}
-                          />
-                          <Button
-                            onClick={() => {
-                              setGroupNameEditState(false);
-                              setCreateGroupState(false);
-                              window.electron.ipcRenderer.sendMessage(
-                                CHANNELS.AddGroup,
-                                {
-                                  name: groupName,
-                                  members: selectedUsers
-                                    .filter((i) => i.ID)
-                                    .map((i) => String(i.ID)),
-                                  id: id,
-                                  serverURL: serverURL,
-                                },
-                              );
-                            }}
-                            name={keyBinds.ADD_GROUP.name}
-                            keyCombination={keyBinds.ADD_GROUP.keyCombination}
-                            style={{
-                              width: '50%',
-                              height: '10px',
-                            }}
-                          />
-                          <Button
-                            onClick={() => {
-                              setGroupNameEditState(false);
-                              setCreateGroupState(false);
-                            }}
-                            name={keyBinds.CANCEL_GROUP.name}
-                            keyCombination={
-                              keyBinds.CANCEL_GROUP.keyCombination
-                            }
-                            style={{
-                              zIndex: '6',
-                              background: '#ad0040',
-                              width: '50%',
-                              height: '10px',
-                            }}
-                          />
-                        </motion.div>
+                        />
                       ) : null}
                     </AnimatePresence>
                   </div>
                 </div>
-                {groupData.map((item, index) => {
-                  return (
-                    <HistoryItem
-                      onClick={(data: {
-                        ID: string;
-                        Name: string;
-                        Members: string[];
-                      }) => {
-                        setSelectedGroup(data);
-                      }}
-                      key={index}
-                      data={item}
-                      type={chatTypeState}
-                    />
-                  );
-                })}
+                {groupData.map((item, index) => (
+                  <HistoryItem
+                    onClick={(data: {
+                      id: string;
+                      name: string;
+                      members: string[];
+                    }) => {
+                      setSelectedGroup(data);
+                    }}
+                    key={index}
+                    data={item}
+                    type={chatTypeState}
+                  />
+                ))}
               </>
             ) : (
               <>
@@ -388,9 +256,9 @@ const ChatHome = () => {
                   return (
                     <HistoryItem
                       onClick={(data: {
-                        Name: string;
-                        ID: string;
-                        PictureData: string;
+                        name: string;
+                        id: string;
+                        pictureData: string;
                       }) => {
                         setSelectedDM(data);
                       }}
@@ -405,7 +273,7 @@ const ChatHome = () => {
           </motion.div>
         </motion.div>
         <motion.div className="RightSubContainer">
-          {selectedGroup.ID != '' || selectedDM.ID != '' ? (
+          {selectedGroup.id != '' || selectedDM.id != '' ? (
             <>
               <div
                 className={`TopProfileView${mode == 'dark' ? 'Dark' : 'Light'}`}
@@ -420,7 +288,7 @@ const ChatHome = () => {
                 ) : null}
                 <div className="ChatBoxProfileContainer">
                   <div>
-                    {chatTypeState == 0 ? selectedGroup.Name : selectedDM.Name}
+                    {chatTypeState == 0 ? selectedGroup.name : selectedDM.name}
                   </div>
                   <div
                     className={`ProfileStatus${
@@ -439,7 +307,7 @@ const ChatHome = () => {
                             mode == 'dark' ? 'rgb(75,75,75)' : '#989898',
                         }}
                       >
-                        {selectedGroup.Members.length}
+                        {selectedGroup.members.length}
                       </div>
                     ) : null}
                     Online
