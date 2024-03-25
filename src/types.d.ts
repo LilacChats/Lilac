@@ -6,6 +6,14 @@ type KeyBindingObject = {
   keyCombination: string[];
 };
 
+type Message = {
+  message: string;
+  messageID: string;
+  senderID: string;
+  receiverID: string;
+  timestamp: number;
+};
+
 type KeyBinds = {
   CHATS: KeyBindingObject;
   NEW_GROUP: KeyBindingObject;
@@ -24,6 +32,7 @@ type KeyBinds = {
   CANCEL_GROUP: KeyBindingObject;
   UPDATE_GROUP: KeyBindingObject;
   PROCEED: KeyBindingObject;
+  LOGOUT: KeyBindingObject;
 };
 
 type DMData = {
@@ -122,31 +131,6 @@ type SignupAnimationObject = {
   animate: Object;
   initialLeft: Object;
   initialRight: Object;
-};
-
-type PollMessageData = {
-  name: string;
-  voteCount: number;
-}[];
-
-type TextMessageData = string;
-
-type ImageMessageData = string;
-
-type VideoMessageData = string;
-
-type FileMessageData = string;
-
-type Message = {
-  timestamp: number;
-  senderID: string;
-  type: 'text' | 'code' | 'image' | 'video' | 'poll' | 'file';
-  data:
-    | TextMessageData
-    | ImageMessageData
-    | VideoMessageData
-    | FileMessageData
-    | PollMessageData;
 };
 
 export {

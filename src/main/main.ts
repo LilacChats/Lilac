@@ -18,6 +18,10 @@ import log from 'electron-log';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { FileDialogObject } from '../types';
+import bcrypt from 'bcrypt';
+const WebSocket = require('ws');
+
+const socket = new WebSocket('http://localhost:3000/connect');
 
 class AppUpdater {
   constructor() {
@@ -28,6 +32,35 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+
+ipcMain.on(CHANNELS.SendMessage, (event, arg) => {
+  axios.post(
+    `${arg.serverURL}${
+      arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+    }sendmessage`,
+    {
+      message: arg.message,
+      senderID: arg.senderID,
+      receiverID: arg.receiverID,
+      timestamp: arg.timestamp,
+    },
+  );
+});
+
+ipcMain.on(CHANNELS.Logout, (event, arg) => {
+  axios
+    .post(
+      `${arg.serverURL}${
+        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+      }logout`,
+      {
+        userid: arg.id,
+      },
+    )
+    .then((response) => {
+      event.reply(CHANNELS.Logout, {});
+    });
+});
 
 ipcMain.on(CHANNELS.LoadKeyBinds, async (event, arg) => {
   let maxChars = 0,
@@ -55,6 +88,17 @@ ipcMain.on(CHANNELS.FetchGroupData, (event, arg) => {
       console.log('55->', response.data);
       event.reply(CHANNELS.FetchGroupData, response.data.data.members);
     });
+});
+
+socket.on('open', () => {
+  ipcMain.on(CHANNELS.TriggerChat, (event, arg) => {
+    socket.send(
+      JSON.stringify({ type: 'all', id1: arg.senderID, id2: arg.receiverID }),
+    );
+    socket.on('message', (data) => {
+      event.reply(CHANNELS.TriggerChat, JSON.parse(data));
+    });
+  });
 });
 
 ipcMain.on(CHANNELS.UpdateGroup, (event, arg) => {
@@ -116,31 +160,34 @@ ipcMain.on(CHANNELS.SelectProfilePicture, async (event, arg) => {
 });
 
 ipcMain.on(CHANNELS.Signup, (event, arg) => {
-  axios
-    .post(
-      `${arg.serverURL}${
-        arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
-      }usersignup`,
-      {
-        name: arg.name,
-        email: arg.email,
-        password: arg.password,
-        pictureData: arg.pictureData,
-      },
-    )
-    .then((response) => {
-      if (!response.data.status) {
-        event.reply(CHANNELS.Signup, {
-          valid: false,
-          message: response.data.message,
-        });
-      } else {
-        event.reply(CHANNELS.Signup, {
-          valid: true,
-          data: { id: response.data.id },
-        });
-      }
-    });
+  bcrypt.hash(arg.password, 10, (err, hash) => {
+    axios
+      .post(
+        `${arg.serverURL}${
+          arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+        }usersignup`,
+        {
+          name: arg.name,
+          email: arg.email,
+          password: hash,
+          pictureData: arg.pictureData,
+          online: true,
+        },
+      )
+      .then((response) => {
+        if (!response.data.status) {
+          event.reply(CHANNELS.Signup, {
+            valid: false,
+            message: response.data.message,
+          });
+        } else {
+          event.reply(CHANNELS.Signup, {
+            valid: true,
+            data: { id: response.data.data.id },
+          });
+        }
+      });
+  });
 });
 
 ipcMain.on(CHANNELS.SaveUIState, (event, arg) => {
@@ -159,6 +206,7 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
       },
     )
     .then((response) => {
+      console.log(response.data);
       if (!response.data.status) {
         event.reply(CHANNELS.VerifyLogin, {
           valid: false,
@@ -180,6 +228,7 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
 });
 
 ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
+  console.log(arg);
   axios
     .post(
       `${arg.serverURL}${
@@ -190,6 +239,7 @@ ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
       },
     )
     .then((response) => {
+      console.log(response.data);
       if (response.data.status) {
         console.log(response.data);
         event.reply(CHANNELS.FetchServerData, {

@@ -13,6 +13,7 @@ import FileIcon from '../../Assets/file.svg';
 import GraphIcon from '../../Assets/graph.svg';
 import RocketIcon from '../../Assets/rocket.svg';
 import PlusIcon from '../../Assets/plus-circle.svg';
+import LogoutIcon from '../../Assets/sign-out.svg';
 import { DMData } from '../../../types';
 import GroupManageDialog from './GroupManageDialog';
 
@@ -42,6 +43,7 @@ const ChatHome = () => {
     pictureData: '',
   });
   const [dmData, setDMData] = useState<DMData[]>([]);
+  const [hoverLogout, setHoverLogout] = useState<boolean>(false);
   const [chatTypeState, setChatTypeState] = useState<0 | 1>(0);
   const [attachmentListState, setAttachmentListState] =
     useState<boolean>(false);
@@ -132,8 +134,8 @@ const ChatHome = () => {
                   chatTypeState == 1
                     ? '#989898'
                     : mode == 'dark'
-                    ? 'white'
-                    : '#2f2f2f',
+                      ? 'white'
+                      : '#2f2f2f',
               }}
             >
               Groups
@@ -149,8 +151,8 @@ const ChatHome = () => {
                   chatTypeState == 0
                     ? '#989898'
                     : mode == 'dark'
-                    ? 'white'
-                    : '#2f2f2f',
+                      ? 'white'
+                      : '#2f2f2f',
               }}
             >
               DM &nbsp;
@@ -260,7 +262,16 @@ const ChatHome = () => {
                         id: string;
                         pictureData: string;
                       }) => {
+                        console.log(data);
                         setSelectedDM(data);
+                        window.electron.ipcRenderer.sendMessage(
+                          CHANNELS.TriggerChat,
+                          {
+                            senderID: id,
+                            receiverID: data.id,
+                            serverURL: serverURL,
+                          },
+                        );
                       }}
                       key={index}
                       data={item}
@@ -283,7 +294,7 @@ const ChatHome = () => {
                     className={`ProfilePicture${
                       mode == 'dark' ? 'Dark' : 'Light'
                     }`}
-                    src={pictureData}
+                    src={selectedDM.pictureData}
                   />
                 ) : null}
                 <div className="ChatBoxProfileContainer">
@@ -354,6 +365,7 @@ const ChatHome = () => {
                 })}
               </motion.div>
               <MessageBox
+                receiverID={selectedDM.id}
                 changeAttachmentState={(value: boolean) => {
                   setAttachmentListState(value);
                 }}
@@ -378,6 +390,60 @@ const ChatHome = () => {
               <p style={{ opacity: '0.50' }}>Start a New Chat</p>
             </div>
           )}
+        </motion.div>
+        <motion.div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '20%',
+            height: '100%',
+            paddingTop: '20px',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-end',
+          }}
+        >
+          <div
+            onClick={() => {
+              window.electron.ipcRenderer.sendMessage(CHANNELS.Logout, {
+                id: id,
+                serverURL: serverURL,
+              });
+            }}
+            onMouseEnter={() => {
+              setHoverLogout(true);
+            }}
+            onMouseLeave={() => {
+              setHoverLogout(false);
+            }}
+            className={`LogoutButton${mode == 'dark' ? 'Dark' : 'Light'}`}
+          >
+            <div
+              style={{
+                height: '100%',
+                paddingBottom: '2px',
+                width: 'fit-content',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              Logout
+            </div>
+            <img
+              src={LogoutIcon}
+              style={{
+                transition: '0.4s all',
+                height: '50%',
+                filter:
+                  mode == 'dark'
+                    ? hoverLogout
+                      ? 'invert(0)'
+                      : 'invert(50)'
+                    : 'invert(0)',
+              }}
+            />
+          </div>
         </motion.div>
       </motion.div>
     </motion.div>

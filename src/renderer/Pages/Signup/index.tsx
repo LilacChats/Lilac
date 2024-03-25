@@ -141,6 +141,7 @@ const SignupPage: React.FC<{
   );
 
   window.electron.ipcRenderer.once(CHANNELS.Signup, (args: any) => {
+    console.log('Signup Completed:->', args);
     if (!args.valid) {
       setSignupErrorState(true);
       setSignupErrorMessage(args.message);

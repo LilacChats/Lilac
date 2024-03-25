@@ -245,15 +245,15 @@ const GroupManageDialog: React.FC<{
             props.mode == 'create'
               ? keyBinds.ADD_GROUP.name
               : deletionConfirmationState
-              ? keyBinds.PROCEED.name
-              : keyBinds.UPDATE_GROUP.name
+                ? keyBinds.PROCEED.name
+                : keyBinds.UPDATE_GROUP.name
           }
           keyCombination={
             props.mode == 'update'
               ? keyBinds.ADD_GROUP.keyCombination
               : deletionConfirmationState
-              ? keyBinds.PROCEED.keyCombination
-              : keyBinds.UPDATE_GROUP.keyCombination
+                ? keyBinds.PROCEED.keyCombination
+                : keyBinds.UPDATE_GROUP.keyCombination
           }
           style={{
             width: '50%',

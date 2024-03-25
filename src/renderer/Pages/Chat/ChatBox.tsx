@@ -6,7 +6,7 @@ import {
 } from 'framer-motion';
 import { useUIStateContext, useAccountContext } from '../../Contexts';
 import { Message } from '../../../types';
-import { MESSAGES } from '../../../objs';
+import { CHANNELS } from '../../../objs';
 import { useEffect, useState, useRef } from 'react';
 import '../../Styles/Chat.css';
 
@@ -26,7 +26,7 @@ const TextMessage: React.FC<Message> = (props) => {
     <motion.div
       className={`MessageBlock${props.senderID == id ? 'Sender' : 'Receiver'}${mode == 'dark' ? 'Dark' : 'Light'}`}
     >
-      <div>{props.data}</div>
+      <div>{props.message}</div>
       <div
         className={`TimestampBlock${props.senderID == id ? 'Sender' : 'Receiver'}`}
       >
@@ -40,8 +40,13 @@ const ChatBox = () => {
   const { mode } = useUIStateContext();
   const chatContainerRef = useRef(null);
   const { scrollYProgress } = useScroll({ container: chatContainerRef });
+  const [messages, setMessages] = useState<Message[]>([]);
   const [pullDownButtonState, setPullDownButtonState] =
     useState<boolean>(false);
+
+  window.electron.ipcRenderer.on(CHANNELS.TriggerChat, (arg) => {
+    setMessages(arg);
+  });
 
   useMotionValueEvent(scrollYProgress, 'change', (latestValue) => {
     // console.log(latestValue);
@@ -57,14 +62,14 @@ const ChatBox = () => {
       ref={chatContainerRef}
       className={`ChatBoxContainer${mode == 'dark' ? 'Dark' : 'Light'}`}
     >
-      {MESSAGES.map((item, index) => {
+      {messages.map((item, index) => {
         return (
           <TextMessage
             key={index}
-            timestamp={item.timestamp}
+            timestamp={item.timestamp + ''}
             senderID={item.senderID}
-            type={item.type}
-            data={item.data}
+            message={item.message}
+            receiverID={item.receiverID}
           />
         );
       })}

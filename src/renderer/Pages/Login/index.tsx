@@ -58,10 +58,9 @@ const LoginPage: React.FC<{
   }
 
   window.electron.ipcRenderer.once(CHANNELS.VerifyLogin, (arg: any) => {
-    // console.log(arg.data);
     if (arg.valid) {
       setName(arg.data.name);
-      setID(arg.data.id);
+      setID(arg.data.ID);
       setPictureData(arg.data.pictureData);
       props.triggerPageChange('Chat');
     } else {

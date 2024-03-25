@@ -18,6 +18,44 @@
   border-radius: 5px;
 }
 
+.LogoutButtonDark,
+.LogoutButtonLight {
+  border-radius: 50px;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 3px solid transparent;
+  gap: 10px;
+  transition: 0.4s all;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.LogoutButtonDark {
+  background: #202020;
+  color: white;
+}
+
+.LogoutButtonLight {
+  background: #bdbdbd;
+  color: black;
+}
+
+.LogoutButtonLight:hover {
+  background: #ff5353;
+  color: black;
+}
+
+.LogoutButtonDark:hover {
+  background: #d75151;
+  color: black;
+}
+
 .GroupDeletionNoticeDark {
   color: #989898;
 }

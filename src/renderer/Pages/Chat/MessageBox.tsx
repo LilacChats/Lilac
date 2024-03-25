@@ -1,15 +1,22 @@
 import '../../Styles/Chat.css';
 import PlusIcon from '../../Assets/plus.svg';
 import SendButton from '../../Assets/send.svg';
-import { useUIStateContext, useMessageContext } from '../../Contexts';
+import { CHANNELS } from '../../../objs';
+import {
+  useAccountContext,
+  useUIStateContext,
+  useMessageContext,
+} from '../../Contexts';
 import { useState, useEffect } from 'react';
 
 const MessageBox: React.FC<{
+  receiverID: string;
   attachmentState: boolean;
   changeAttachmentState: (value: boolean) => void;
 }> = (props) => {
   const { message, setMessage } = useMessageContext();
   const { mode } = useUIStateContext();
+  const { id, serverURL } = useAccountContext();
   const [height, setHeight] = useState<number>(50);
   useEffect(() => {
     var numberOfBreaks = 1;
@@ -79,7 +86,19 @@ const MessageBox: React.FC<{
           placeholder="Enter Your Message"
           className={`MessageTextBox${mode == 'dark' ? 'Dark' : 'Light'}`}
         />
-        <div className="SendButton">
+        <div
+          onClick={() => {
+            window.electron.ipcRenderer.sendMessage(CHANNELS.SendMessage, {
+              serverURL: serverURL,
+              message: message,
+              senderID: id,
+              receiverID: props.receiverID,
+              timestamp: Math.floor(Date.now() / 1000),
+            });
+            setMessage('');
+          }}
+          className="SendButton"
+        >
           <img
             src={SendButton}
             style={{

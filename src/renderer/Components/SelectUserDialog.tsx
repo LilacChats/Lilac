@@ -121,8 +121,8 @@ const SelectUserDialog: React.FC<{
                         ? 'rgb(74, 137, 253)'
                         : 'rgb(56, 104, 192)'
                       : mode == 'dark'
-                      ? '#202020'
-                      : '#bdbdbd',
+                        ? '#202020'
+                        : '#bdbdbd',
                   }}
                   className={`CheckBox${mode == 'dark' ? 'Dark' : 'Light'}`}
                 >
@@ -136,8 +136,8 @@ const SelectUserDialog: React.FC<{
                             ? 'invert(50)'
                             : 'invert(0)'
                           : !item.selected
-                          ? 'invert(0)'
-                          : 'invert(50)',
+                            ? 'invert(0)'
+                            : 'invert(50)',
                     }}
                   />
                 </div>

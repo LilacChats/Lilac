@@ -26,6 +26,9 @@ const HistoryItem: React.FC<{
     <>
       {props.type == 1 ? (
         <motion.div
+          onClick={() => {
+            if (props.data) props.onClick(props.data);
+          }}
           key={props.key}
           style={{
             justifyContent: 'flex-start',

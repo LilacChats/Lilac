@@ -5,6 +5,7 @@ import {
   MessageProvider,
 } from './Contexts';
 import './Styles/App.css';
+import { CHANNELS } from '../objs';
 import { useState } from 'react';
 import LoginPage from './Pages/Login/index';
 import { AppPages } from '../types';
@@ -14,6 +15,9 @@ import UISwitcher from './Components/UISwitcher';
 
 const App = () => {
   const [pageState, setPageState] = useState<AppPages>('Login');
+  window.electron.ipcRenderer.once(CHANNELS.Logout, (arg: any) => {
+    window.location.reload();
+  });
   return (
     <div>
       <div
