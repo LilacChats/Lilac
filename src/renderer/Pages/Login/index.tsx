@@ -47,7 +47,6 @@ const LoginPage: React.FC<{
     compLabel: InputBoxTypes,
     errorState: boolean,
   ) {
-    console.log('Triggered ', compLabel);
     compSetterFunction(
       Math.floor(Date.now() / 1000).toString() +
         '_' +
@@ -88,7 +87,6 @@ const LoginPage: React.FC<{
       refreshComponent(setEmailValidationString, 'email', true);
     }
     if (password.length == 0) {
-      console.log('Pass');
       passwordValidationStatus = false;
       refreshComponent(setPasswordValidationString, 'password', true);
     }
@@ -102,7 +100,6 @@ const LoginPage: React.FC<{
       passwordValidationStatus
     ) {
       //Verify Login
-      // console.log(email, password, serverURL);
       window.electron.ipcRenderer.sendMessage(CHANNELS.VerifyLogin, {
         email: email,
         password: password,

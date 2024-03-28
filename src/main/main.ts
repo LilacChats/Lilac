@@ -11,15 +11,16 @@
 import path from 'path';
 import fs from 'fs';
 import axios from 'axios';
-import { CHANNELS } from '../objs';
+import { CHANNELS, SOCKET_EVENTS } from '../objs';
 import { dialog, app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { FileDialogObject } from '../types';
+import { FileDialogObject, Message } from '../types';
 import bcrypt from 'bcrypt';
 const WebSocket = require('ws');
+let ID: string = '';
 
 const socket = new WebSocket('http://localhost:3000/connect');
 
@@ -32,20 +33,6 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on(CHANNELS.SendMessage, (event, arg) => {
-  axios.post(
-    `${arg.serverURL}${
-      arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
-    }sendmessage`,
-    {
-      message: arg.message,
-      senderID: arg.senderID,
-      receiverID: arg.receiverID,
-      timestamp: arg.timestamp,
-    },
-  );
-});
 
 ipcMain.on(CHANNELS.Logout, (event, arg) => {
   axios
@@ -85,19 +72,79 @@ ipcMain.on(CHANNELS.FetchGroupData, (event, arg) => {
       },
     )
     .then((response) => {
-      console.log('55->', response.data);
       event.reply(CHANNELS.FetchGroupData, response.data.data.members);
     });
 });
 
 socket.on('open', () => {
+  socket.on('message', (data: any) => {
+    let jsonData: { type: string; data: any } = JSON.parse(data);
+    switch (jsonData.type) {
+      case SOCKET_EVENTS.FETCH_CHATS:
+        console.log('received new chats');
+        mainWindow?.webContents.send(CHANNELS.FetchChatData, jsonData.data);
+        break;
+      case SOCKET_EVENTS.REFRESH:
+        console.log('refresh command received->', {
+          type: SOCKET_EVENTS.FETCH_CHATS,
+          id1: jsonData.data.id1,
+          id2: jsonData.data.id2,
+        });
+        socket.send(
+          JSON.stringify({
+            type: SOCKET_EVENTS.FETCH_CHATS,
+            id1: jsonData.data.id1,
+            id2: jsonData.data.id2,
+          }),
+        );
+    }
+  });
+  ipcMain.on(CHANNELS.SendMessage, (event, arg) => {
+    axios
+      .post(
+        `${arg.serverURL}${
+          arg.serverURL[arg.serverURL.length - 1] == '/' ? '' : '/'
+        }sendmessage`,
+        {
+          message: arg.message,
+          senderID: arg.senderID,
+          receiverID: arg.receiverID,
+          timestamp: arg.timestamp,
+        },
+      )
+      .then((response) => {
+        socket.send(
+          JSON.stringify({
+            type: SOCKET_EVENTS.SEND_CHAT,
+            id1: arg.senderID,
+            id2: arg.receiverID,
+          }),
+        );
+        socket.send(
+          JSON.stringify({
+            type: SOCKET_EVENTS.FETCH_CHATS,
+            id1: arg.senderID,
+            id2: arg.receiverID,
+          }),
+        );
+      });
+  });
+
+  ipcMain.on(CHANNELS.FetchID, (event, arg) => {
+    ID = arg.id;
+    socket.send(
+      JSON.stringify({ type: SOCKET_EVENTS.REGISTER, id1: arg.id, id2: '' }),
+    );
+  });
+
   ipcMain.on(CHANNELS.TriggerChat, (event, arg) => {
     socket.send(
-      JSON.stringify({ type: 'all', id1: arg.senderID, id2: arg.receiverID }),
+      JSON.stringify({
+        type: SOCKET_EVENTS.FETCH_CHATS,
+        id1: ID,
+        id2: arg.receiverID,
+      }),
     );
-    socket.on('message', (data) => {
-      event.reply(CHANNELS.TriggerChat, JSON.parse(data));
-    });
   });
 });
 
@@ -116,7 +163,6 @@ ipcMain.on(CHANNELS.UpdateGroup, (event, arg) => {
     )
     .then((groupResponse) => {
       if (groupResponse.data.status) {
-        console.log('SENT');
         axios
           .post(
             `${arg.serverURL}${
@@ -206,7 +252,6 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
       },
     )
     .then((response) => {
-      console.log(response.data);
       if (!response.data.status) {
         event.reply(CHANNELS.VerifyLogin, {
           valid: false,
@@ -228,7 +273,6 @@ ipcMain.on(CHANNELS.VerifyLogin, (event, arg) => {
 });
 
 ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
-  console.log(arg);
   axios
     .post(
       `${arg.serverURL}${
@@ -239,9 +283,7 @@ ipcMain.on(CHANNELS.FetchServerData, (event, arg) => {
       },
     )
     .then((response) => {
-      console.log(response.data);
       if (response.data.status) {
-        console.log(response.data);
         event.reply(CHANNELS.FetchServerData, {
           data: response.data.data,
           type: arg.type,

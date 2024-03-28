@@ -583,7 +583,7 @@
 .MessageBlockSenderLight,
 .MessageBlockReceiverLight {
   /* min-height: 40px; */
-  min-width: 100px;
+  min-width: 80px;
   max-width: 300px;
   width: fit-content;
   /* height: fit-content; */
@@ -591,8 +591,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding: 10px;
+  /*padding: 10px;*/
 }
 
 .MessageBlockSenderDark,
@@ -611,12 +610,14 @@
 .MessageBlockSenderLight {
   border-radius: 5px 20px 20px 20px;
   align-self: flex-start;
+  padding: 10px 30px 10px 10px;
 }
 
 .MessageBlockReceiverDark,
 .MessageBlockReceiverLight {
   border-radius: 20px 5px 20px 20px;
   align-self: flex-end;
+  padding: 10px 10px 10px 15px;
 }
 
 .AttachmentItemDark,
@@ -696,7 +697,7 @@
 .TimestampBlockSender {
   width: 100%;
   font-size: 12px;
-  margin-top: 20px;
+  /*margin-top: 20px;*/
 }
 
 .TimestampBlockReceiver {

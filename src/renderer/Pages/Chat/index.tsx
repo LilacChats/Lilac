@@ -55,6 +55,9 @@ const ChatHome = () => {
       serverURL: serverURL,
     });
   }, [chatTypeState]);
+  useEffect(() => {
+    window.electron.ipcRenderer.sendMessage(CHANNELS.FetchID, { id: id });
+  }, [id]);
 
   window.electron.ipcRenderer.on(CHANNELS.FetchServerData, (arg: any) => {
     if (chatTypeState == 0 && arg.type == 'Groups') {
@@ -63,7 +66,6 @@ const ChatHome = () => {
           for (var i = 0; i < arg.data.length; i++) {
             arg.data[i].active = false;
           }
-          console.log('data->', arg.data);
           setGroupData(arg.data);
           setDMData([]);
         } else setGroupData([]);
@@ -73,7 +75,6 @@ const ChatHome = () => {
       }
     } else if (chatTypeState == 1 && arg.type == 'DM') {
       if (arg.data.length > 0) {
-        console.log(arg.data);
         setDMData(arg.data);
       } else setDMData([]);
     }
@@ -134,8 +135,8 @@ const ChatHome = () => {
                   chatTypeState == 1
                     ? '#989898'
                     : mode == 'dark'
-                      ? 'white'
-                      : '#2f2f2f',
+                    ? 'white'
+                    : '#2f2f2f',
               }}
             >
               Groups
@@ -151,8 +152,8 @@ const ChatHome = () => {
                   chatTypeState == 0
                     ? '#989898'
                     : mode == 'dark'
-                      ? 'white'
-                      : '#2f2f2f',
+                    ? 'white'
+                    : '#2f2f2f',
               }}
             >
               DM &nbsp;
@@ -262,16 +263,16 @@ const ChatHome = () => {
                         id: string;
                         pictureData: string;
                       }) => {
-                        console.log(data);
                         setSelectedDM(data);
-                        window.electron.ipcRenderer.sendMessage(
-                          CHANNELS.TriggerChat,
-                          {
-                            senderID: id,
-                            receiverID: data.id,
-                            serverURL: serverURL,
-                          },
-                        );
+                        if (data)
+                          window.electron.ipcRenderer.sendMessage(
+                            CHANNELS.TriggerChat,
+                            {
+                              senderID: id,
+                              receiverID: data.id,
+                              serverURL: serverURL,
+                            },
+                          );
                       }}
                       key={index}
                       data={item}

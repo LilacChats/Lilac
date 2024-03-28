@@ -24,11 +24,15 @@ const TextMessage: React.FC<Message> = (props) => {
   }, []);
   return (
     <motion.div
-      className={`MessageBlock${props.senderID == id ? 'Sender' : 'Receiver'}${mode == 'dark' ? 'Dark' : 'Light'}`}
+      className={`MessageBlock${props.senderID == id ? 'Sender' : 'Receiver'}${
+        mode == 'dark' ? 'Dark' : 'Light'
+      }`}
     >
       <div>{props.message}</div>
       <div
-        className={`TimestampBlock${props.senderID == id ? 'Sender' : 'Receiver'}`}
+        className={`TimestampBlock${
+          props.senderID == id ? 'Sender' : 'Receiver'
+        }`}
       >
         {timestamp}
       </div>
@@ -43,14 +47,22 @@ const ChatBox = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [pullDownButtonState, setPullDownButtonState] =
     useState<boolean>(false);
-
-  window.electron.ipcRenderer.on(CHANNELS.TriggerChat, (arg) => {
+  const handleScrollToBottom = () => {
+    if (chatContainerRef.current)
+      chatContainerRef.current.scroll({
+        top: chatContainerRef.current.scrollHeight + 3000,
+        behavior: 'smooth',
+      });
+  };
+  useEffect(() => {
+    handleScrollToBottom();
+  }, [messages]);
+  window.electron.ipcRenderer.on(CHANNELS.FetchChatData, (arg: any) => {
     setMessages(arg);
   });
 
   useMotionValueEvent(scrollYProgress, 'change', (latestValue) => {
-    // console.log(latestValue);
-    if (latestValue <= 0.98) {
+    if (latestValue <= 0.99) {
       setPullDownButtonState(true);
     } else {
       setPullDownButtonState(false);
@@ -76,13 +88,10 @@ const ChatBox = () => {
       <AnimatePresence>
         {pullDownButtonState ? (
           <motion.div
-            onClick={() => {
-              chatContainerRef.current.scroll({
-                top: chatContainerRef.current.scrollHeight,
-                behaviour: 'smooth',
-              });
-            }}
-            className={`LatestMessageFetcher${mode == 'dark' ? 'Dark' : 'Light'}`}
+            onClick={handleScrollToBottom}
+            className={`LatestMessageFetcher${
+              mode == 'dark' ? 'Dark' : 'Light'
+            }`}
           >
             Go to Latest Message
           </motion.div>

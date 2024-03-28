@@ -112,7 +112,6 @@ const SignupPage: React.FC<{
           refreshComponent(setEmailValidationString, 'email', true);
         }
         if (password.length == 0) {
-          console.log('Pass');
           passwordValidationStatus = false;
           refreshComponent(setPasswordValidationString, 'password', true);
         }
@@ -141,7 +140,6 @@ const SignupPage: React.FC<{
   );
 
   window.electron.ipcRenderer.once(CHANNELS.Signup, (args: any) => {
-    console.log('Signup Completed:->', args);
     if (!args.valid) {
       setSignupErrorState(true);
       setSignupErrorMessage(args.message);

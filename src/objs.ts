@@ -75,6 +75,8 @@ const enum CHANNELS {
   Logout = 'Logout',
   SendMessage = 'SendMessage',
   TriggerChat = 'TriggerChat',
+  FetchID = 'FetchID',
+  FetchChatData = 'FetchChatData',
 }
 
 const INITIAL_UI_STATE_CONTEXT: UIStateContext = {
@@ -121,16 +123,26 @@ const SIGNUP_ANIMATION_OBJS: SignupAnimationObject = {
   },
 };
 
+const enum SOCKET_EVENTS {
+  REGISTER = 'register',
+  SEND_CHAT = 'sendchat',
+  FETCH_CHATS = 'fetchchats',
+  REFRESH = 'refresh',
+  DEREGISTER = 'deregister',
+}
+
 const MESSAGES: Message[] = [
   {
-    type: 'text',
     timestamp: parseInt(Date.now() / 1000 + ''),
     senderID: 'xyz',
-    data: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+    receiverID: ' oemf',
+    message: `Hi there I'm here and bla bla bla heheheeeheefinwefiwf ewrofiwefoimwef weofinweofmwef woeifweofewofn`,
+    messageID: 'weif',
   },
 ];
 
 export {
+  SOCKET_EVENTS,
   MESSAGES,
   EMPTY_KEYBINDS,
   INITIAL_KEYBINDS_CONTEXT,

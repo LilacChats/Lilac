@@ -23,14 +23,12 @@ const SelectUserDialog: React.FC<{
   }, []);
 
   useEffect(() => {
-    console.log(props.members);
     var tempData = selectedUsers;
     for (var i = 0; i < tempData.length; i++) {
       if (props.members?.findIndex((item) => item === tempData[i].ID)) {
         tempData[i].selected = true;
       }
     }
-    console.log('!!!->', tempData);
     setSelectedUsers(tempData);
   }, [props.members]);
 
@@ -40,7 +38,6 @@ const SelectUserDialog: React.FC<{
         if (args.data.length > 0) {
           var tempData: any = [];
           for (var i = 0; i < args.data.length; i++) {
-            // console.log(props.members, args.data[i].ID);
             tempData.push({
               selected:
                 props.members?.findIndex((item) => item === args.data[i].id) !=
@@ -56,7 +53,6 @@ const SelectUserDialog: React.FC<{
     }
   });
   useEffect(() => {
-    // console.log(selectedUsers);
     props.onChange(selectedUsers);
   }, [selectedUsers]);
 
@@ -121,8 +117,8 @@ const SelectUserDialog: React.FC<{
                         ? 'rgb(74, 137, 253)'
                         : 'rgb(56, 104, 192)'
                       : mode == 'dark'
-                        ? '#202020'
-                        : '#bdbdbd',
+                      ? '#202020'
+                      : '#bdbdbd',
                   }}
                   className={`CheckBox${mode == 'dark' ? 'Dark' : 'Light'}`}
                 >
@@ -136,8 +132,8 @@ const SelectUserDialog: React.FC<{
                             ? 'invert(50)'
                             : 'invert(0)'
                           : !item.selected
-                            ? 'invert(0)'
-                            : 'invert(50)',
+                          ? 'invert(0)'
+                          : 'invert(50)',
                     }}
                   />
                 </div>
